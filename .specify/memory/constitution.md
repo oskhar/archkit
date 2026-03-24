@@ -1,50 +1,204 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# archkit Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Experiment Integrity (NON-NEGOTIABLE)
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+This repository exists to evaluate development complexity across architectures.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+Rules:
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+* The same business capability must be implemented in both architectures.
+* No feature advantage allowed in one architecture that does not exist in the other.
+* Any deviation must be explicitly documented in the experiment notes.
+* Changes must preserve comparability between implementations.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+Objective:
+Ensure results measure architectural impact, not developer bias.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### II. Strict Smallest Change Set (SCS) Discipline
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+Every branch represents exactly one Smallest Change Set.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+Rules:
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+* One branch = one SCS.
+* No mixed concerns in a single branch.
+* Each commit must be atomic and purposeful.
+* No opportunistic refactoring.
+* Branch names must follow predefined experiment naming.
+
+Measurement requirements:
+
+* Files changed must be measurable.
+* Code changes must remain scoped.
+* Commit history must reflect actual development flow.
+
+Purpose:
+Enable accurate measurement of development complexity.
+
+
+### III. Architecture Parity
+
+Both architectures must implement the same domain capabilities.
+
+Monolith architecture:
+
+* NestJS modular monolith
+* TypeORM
+* Zod DTO validation
+* MySQL
+
+Hybrid architecture:
+
+* Microservices per domain
+* CQRS
+* Event sourcing
+* Kafka as transport
+* NestJS + @nestjs/cqrs
+* TypeORM
+* Zod DTO validation
+* MySQL
+
+Constraint:
+Hybrid architecture must not introduce unnecessary network chatter or artificial complexity.
+
+Goal:
+Compare complexity fairly, not exaggerate architectural benefits.
+
+
+### IV. Vertical Slice Domain Ownership
+
+The system must be decomposed by subdomain.
+
+Domains:
+
+* Product (item management)
+* Inventory (stock management)
+* Sales (transaction processing)
+
+Rules:
+
+* Each domain owns its logic and boundaries.
+* Cross-domain interaction must be explicit.
+* Domain leakage is prohibited.
+
+Hybrid architecture constraint:
+Services must communicate via event-driven contracts.
+
+Purpose:
+Preserve realistic architectural structure.
+
+
+### V. Measurable Development Complexity
+
+All development must produce measurable signals.
+
+Metrics required:
+
+* Number of files touched per SCS
+* Lines of code changed
+* Lead time per SCS
+* Number of commits per SCS
+* Time between commits
+
+Measurement must be automated where possible.
+
+Rules:
+
+* No squashing commits during experiment.
+* Commit timestamps must reflect actual work.
+* Metrics must be reproducible.
+
+Goal:
+Provide objective comparison between architectures.
+
+
+## Architectural Constraints
+
+Repository model:
+Single repository experiment.
+
+Structure must separate implementations clearly.
+
+Example structure:
+
+monolith/
+- src/
+
+hybrid/
+- turbo.json
+- apps/
+-- api-gateway/
+-- product/
+-- inventory/
+-- sales/
+
+
+Rules:
+
+* Shared code must remain minimal.
+* Domains must remain isolated.
+* Hybrid architecture must avoid tight coupling.
+
+Performance constraint:
+Event communication must not become a bottleneck due to poor design.
+
+
+## Development Workflow
+
+Branching model (MANDATORY):
+
+Baseline Architecture
+
+* scs-baseline--setup-nestjs
+* scs-baseline--setup-database
+* scs-baseline--product-domain
+* scs-baseline--inventory-domain
+* scs-baseline--sales-domain
+
+Hybrid Architecture
+
+* scs-hybrid--setup-turbo
+* scs-hybrid--setup-nestjs
+* scs-hybrid--setup-kafka
+* scs-hybrid--setup-database
+* scs-hybrid--product-service
+* scs-hybrid--inventory-service
+* scs-hybrid--sales-service
+
+Workflow rules:
+
+1. Create branch from main.
+2. Implement only the assigned SCS.
+3. Commit incrementally.
+4. Record metrics.
+5. Merge after completion.
+
+Prohibited:
+
+* Mixing SCS.
+* Skipping experiment steps.
+* Refactoring outside scope.
+
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution overrides personal preferences and ad-hoc development decisions.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+All pull requests must validate:
+
+* SCS scope compliance
+* Architecture parity
+* Metric validity
+
+Amendments to this constitution require:
+
+1. Justification
+2. Impact analysis on experiment validity
+3. Version update
+
+Experiment validity has higher priority than speed.
+
+
+Version: 1.0.0 | Ratified: 2026-03-25 | Last Amended: 2026-03-25

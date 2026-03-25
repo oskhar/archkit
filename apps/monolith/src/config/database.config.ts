@@ -11,6 +11,7 @@ export default registerAs(
     password: process.env.DB_PASSWORD || 'archkit_password',
     database: process.env.DB_NAME || 'archkit_monolith',
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+    migrations: [__dirname + '/../migrations/*{.ts,.js}'],
     synchronize: process.env.NODE_ENV !== 'production',
     logging: process.env.NODE_ENV !== 'production',
   }),

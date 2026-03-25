@@ -45,8 +45,8 @@
 
 - [X] T005 [P] [US1] Add `emoji` field to `feat` type in `.czrc` (emoji: "✨")
 - [X] T006 [P] [US1] Add `emoji` field to `fix` type in `.czrc` (emoji: "🐛")
-- [ ] T007 [US1] Perform manual test commit with `feat` type and verify leading ✨ in `git log`
-- [ ] T008 [US1] Perform manual test commit with `fix` type and verify leading 🐛 in `git log`
+- [X] T007 [US1] Perform manual test commit with `feat` type and verify leading ✨ in `git log`
+- [X] T008 [US1] Perform manual test commit with `fix` type and verify leading 🐛 in `git log`
 
 **Checkpoint**: User Story 1 is functional for core commit types.
 
@@ -60,11 +60,11 @@
 
 ### Implementation for User Story 2
 
-- [ ] T009 [P] [US2] Map emojis for documentation types (`docs`: "📚", `comments`: "💬") in `.czrc`
-- [ ] T010 [P] [US2] Map emojis for code quality types (`style`: "💄", `refactor`: "♻️", `test`: "🧪", `lint`: "🚨") in `.czrc`
-- [ ] T011 [P] [US2] Map emojis for maintenance types (`chore`: "🔧", `perf`: "🚀", `deps`: "📦️", `remove`: "🗑️") in `.czrc`
-- [ ] T012 [P] [US2] Map emojis for security and ops types (`security`: "🛡", `config`: "⚙️", `merge`: "🔀", `revert`: "⏪️", `init`: "⭐") in `.czrc`
-- [ ] T013 [US2] Validate all types in `.czrc` have unique and appropriate emojis per project standards
+- [X] T009 [P] [US2] Map emojis for documentation types (`docs`: "📚", `comments`: "💬") in `.czrc`
+- [X] T010 [P] [US2] Map emojis for code quality types (`style`: "💄", `refactor`: "♻️", `test`: "🧪", `lint`: "🚨") in `.czrc`
+- [X] T011 [P] [US2] Map emojis for maintenance types (`chore`: "🔧", `perf`: "🚀", `deps`: "📦️", `remove`: "🗑️") in `.czrc`
+- [X] T012 [P] [US2] Map emojis for security and ops types (`security`: "🛡", `config`: "⚙️", `merge`: "🔀", `revert`: "⏪️", `init`: "⭐") in `.czrc`
+- [X] T013 [US2] Validate all types in `.czrc` have unique and appropriate emojis per project standards
 
 **Checkpoint**: All commit types are visually categorized with emojis.
 
@@ -74,9 +74,9 @@
 
 **Purpose**: Improvements and final validation.
 
-- [ ] T014 [P] Remove `.czrc.bak` backup file
-- [ ] T015 Run `quickstart.md` validation to ensure instructions are accurate
-- [ ] T016 Verify `emojiAlign: "left"` consistency across different terminal emulators (if possible)
+- [X] T014 [P] Remove `.czrc.bak` backup file
+- [X] T015 Run `quickstart.md` validation to ensure instructions are accurate
+- [X] T016 Verify `emojiAlign: "left"` consistency across different terminal emulators (if possible)
 
 ---
 

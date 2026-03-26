@@ -12,5 +12,24 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
 
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:latest
+    restart: always
+    command:
+      - redpanda
+      - start
+      - --smp 1
+      - --memory 1G
+      - --overprovisioned
+      - --kafka-addr PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      - --advertise-kafka-addr PLAINTEXT://redpanda:29092,OUTSIDE://localhost:9092
+      - --check=false
+    ports:
+      - '9092:9092'
+      - '9644:9644'
+    volumes:
+      - redpanda_data:/var/lib/redpanda/data
+
 volumes:
   mysql_data:
+  redpanda_data:

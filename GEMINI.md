@@ -17,6 +17,10 @@ Auto-generated from all feature plans. Last updated: 2026-03-26
 - MariaDB 11.8 (locally available) (008-scs-baseline--testing-validation)
 - TypeScript 5.7 / Node.js 20+ + TurboRepo, NPM Workspaces (009-scs-hybrid-setup-turbo)
 - N/A (Infrastructure setup) (009-scs-hybrid-setup-turbo)
+- TypeScript 5.7 / Node.js 20+ + NestJS 11, @nestjs/cqrs, TypeORM 0.3.28, Zod 3.x (011-scs-hybrid-setup-nestjs)
+- MySQL 8.0 (via TypeORM) (011-scs-hybrid-setup-nestjs)
+- TypeScript 5.7 / Node.js 20+ + NestJS 11, @nestjs/microservices, kafkajs, TurboRepo (012-scs-hybrid-setup-kafka)
+- MySQL 8.0, Kafka (Redpanda or standard Kafka) (012-scs-hybrid-setup-kafka)
 
 - TypeScript (Node.js 20+) + NestJS, TypeORM, Zod, MySQL, Kafka, @nestjs/cqrs, TurboRepo (000-pos-architecture-benchmark)
 
@@ -36,9 +40,9 @@ npm test && npm run lint
 TypeScript (Node.js 20+): Follow standard conventions
 
 ## Recent Changes
+- 012-scs-hybrid-setup-kafka: Added TypeScript 5.7 / Node.js 20+ + NestJS 11, @nestjs/microservices, kafkajs, TurboRepo
+- 011-scs-hybrid-setup-nestjs: Added TypeScript 5.7 / Node.js 20+ + NestJS 11, @nestjs/cqrs, TypeORM 0.3.28, Zod 3.x
 - 010-scs-hybrid-relocate-turbo: Added TypeScript 5.7 / Node.js 20+ + TurboRepo, NPM Workspaces
-- 009-scs-hybrid-setup-turbo: Added TypeScript 5.7 / Node.js 20+ + TurboRepo, NPM Workspaces
-- 009-scs-hybrid-setup-turbo: Added TypeScript 5.7 / Node.js 20+ + TurboRepo, NPM Workspaces
 
 
 <!-- MANUAL ADDITIONS START -->

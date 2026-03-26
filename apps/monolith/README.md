@@ -96,3 +96,25 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## Product API
+
+The Product domain provides a set of REST endpoints for managing products in the catalog.
+
+### Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/products` | Create a new product |
+| GET | `/products` | List all products |
+| GET | `/products/:id` | Get product details |
+| PATCH | `/products/:id` | Update product details |
+| DELETE | `/products/:id` | Delete a product |
+
+### Example Request (Create Product)
+
+```bash
+curl -X POST http://localhost:3000/products \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Coffee Beans", "price": 15.50}'
+```

@@ -4,6 +4,7 @@ import { HealthController } from './interface/health.controller';
 import { DiagnosticsController } from './interface/diagnostics.controller';
 import { ProductsController } from './interface/products.controller';
 import { InventoryController } from './interface/inventory.controller';
+import { SalesController } from './interface/sales.controller';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { InventoryController } from './interface/inventory.controller';
     DiagnosticsController,
     ProductsController,
     InventoryController,
+    SalesController,
   ],
   providers: [],
 })

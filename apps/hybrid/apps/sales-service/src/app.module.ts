@@ -1,7 +1,17 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CqrsModule } from '@nestjs/cqrs';
 import { HealthController } from './interface/health.controller';
+import { SalesTransaction } from './domain/entities/sales-transaction.entity';
+import { SalesItem } from './domain/entities/sales-item.entity';
+import { ProductCache } from './domain/entities/product-cache.entity';
+import { KafkaModule } from './infrastructure/kafka/kafka.module';
+import { ProductEventConsumer } from './infrastructure/kafka/product-event.consumer';
+import { SalesController } from './interface/controllers/sales.controller';
+import { SalesRepository } from './infrastructure/repositories/sales.repository';
+import { CreateSaleHandler } from './application/commands/create-sale.handler';
+import { GetSaleHandler } from './application/queries/get-sale.handler';
 
 @Module({
   imports: [
@@ -18,13 +28,16 @@ import { HealthController } from './interface/health.controller';
         username: configService.get<string>('DB_USERNAME', 'archkit_user'),
         password: configService.get<string>('DB_PASSWORD', 'archkit_password'),
         database: configService.get<string>('DB_DATABASE', 'archkit_sales'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        entities: [SalesTransaction, SalesItem, ProductCache],
         synchronize: true, // For experiment purposes
       }),
       inject: [ConfigService],
     }),
+    TypeOrmModule.forFeature([SalesTransaction, SalesItem, ProductCache]),
+    CqrsModule,
+    KafkaModule,
   ],
-  controllers: [HealthController],
-  providers: [],
+  controllers: [HealthController, ProductEventConsumer, SalesController],
+  providers: [SalesRepository, CreateSaleHandler, GetSaleHandler],
 })
 export class AppModule {}

@@ -1,16 +1,42 @@
 services:
-  mysql:
+  mysql-product:
     image: mysql:8.0
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: archkit_monolith
+      MYSQL_DATABASE: archkit_product
       MYSQL_USER: archkit_user
       MYSQL_PASSWORD: archkit_password
     ports:
-      - '3306:3306'
+      - '3307:3306'
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_product_data:/var/lib/mysql
+
+  mysql-inventory:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: archkit_inventory
+      MYSQL_USER: archkit_user
+      MYSQL_PASSWORD: archkit_password
+    ports:
+      - '3308:3306'
+    volumes:
+      - mysql_inventory_data:/var/lib/mysql
+
+  mysql-sales:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: archkit_sales
+      MYSQL_USER: archkit_user
+      MYSQL_PASSWORD: archkit_password
+    ports:
+      - '3309:3306'
+    volumes:
+      - mysql_sales_data:/var/lib/mysql
 
   redpanda:
     image: docker.redpanda.com/redpandadata/redpanda:latest
@@ -31,5 +57,7 @@ services:
       - redpanda_data:/var/lib/redpanda/data
 
 volumes:
-  mysql_data:
+  mysql_product_data:
+  mysql_inventory_data:
+  mysql_sales_data:
   redpanda_data:

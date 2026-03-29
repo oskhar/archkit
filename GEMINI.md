@@ -1,6 +1,6 @@
 # archkit Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-03-26
+Auto-generated from all feature plans. Last updated: 2026-03-29
 
 ## Active Technologies
 - MySQL (isolated per service in Hybrid, shared in Monolith) (000-pos-architecture-benchmark)
@@ -21,6 +21,12 @@ Auto-generated from all feature plans. Last updated: 2026-03-26
 - MySQL 8.0 (via TypeORM) (011-scs-hybrid-setup-nestjs)
 - TypeScript 5.7 / Node.js 20+ + NestJS 11, @nestjs/microservices, kafkajs, TurboRepo (012-scs-hybrid-setup-kafka)
 - MySQL 8.0, Kafka (Redpanda or standard Kafka) (012-scs-hybrid-setup-kafka)
+- TypeScript 5.7 / Node.js 20+ + NestJS 11, TypeORM 0.3.28, mysql2 3.12.0, Docker, Docker Compose (013-scs-hybrid--setup-database)
+- MySQL 8.0 (Isolated per service) (013-scs-hybrid--setup-database)
+- TypeScript 5.7 / Node.js 20+ + NestJS 11, `@nestjs/cqrs`, `@nestjs/microservices` (Kafka), TypeORM 0.3.28, Zod (014-scs-hybrid--product-service)
+- MySQL 8.0 (Isolated `archkit_product` database) (014-scs-hybrid--product-service)
+- TypeScript 5.7 / Node.js 20+ + NestJS 11 + @nestjs/cqrs + @nestjs/microservices + TypeORM 0.3.28 + Zod 3.x (015-scs-hybrid--inventory-service)
+- MySQL 8.0 (Isolated `archkit_inventory` database) (015-scs-hybrid--inventory-service)
 
 - TypeScript (Node.js 20+) + NestJS, TypeORM, Zod, MySQL, Kafka, @nestjs/cqrs, TurboRepo (000-pos-architecture-benchmark)
 
@@ -40,9 +46,9 @@ npm test && npm run lint
 TypeScript (Node.js 20+): Follow standard conventions
 
 ## Recent Changes
-- 012-scs-hybrid-setup-kafka: Added TypeScript 5.7 / Node.js 20+ + NestJS 11, @nestjs/microservices, kafkajs, TurboRepo
-- 011-scs-hybrid-setup-nestjs: Added TypeScript 5.7 / Node.js 20+ + NestJS 11, @nestjs/cqrs, TypeORM 0.3.28, Zod 3.x
-- 010-scs-hybrid-relocate-turbo: Added TypeScript 5.7 / Node.js 20+ + TurboRepo, NPM Workspaces
+- 015-scs-hybrid--inventory-service: Added TypeScript 5.7 / Node.js 20+ + NestJS 11 + @nestjs/cqrs + @nestjs/microservices + TypeORM 0.3.28 + Zod 3.x
+- 014-scs-hybrid--product-service: Added TypeScript 5.7 / Node.js 20+ + NestJS 11, `@nestjs/cqrs`, `@nestjs/microservices` (Kafka), TypeORM 0.3.28, Zod
+- 013-scs-hybrid--setup-database: Added TypeScript 5.7 / Node.js 20+ + NestJS 11, TypeORM 0.3.28, mysql2 3.12.0, Docker, Docker Compose
 
 
 <!-- MANUAL ADDITIONS START -->

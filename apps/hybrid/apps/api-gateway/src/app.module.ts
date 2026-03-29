@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { HealthController } from './interface/health.controller';
 import { DiagnosticsController } from './interface/diagnostics.controller';
+import { ProductsController } from './interface/products.controller';
+import { InventoryController } from './interface/inventory.controller';
 
 @Module({
   imports: [
@@ -21,7 +23,12 @@ import { DiagnosticsController } from './interface/diagnostics.controller';
       },
     ]),
   ],
-  controllers: [HealthController, DiagnosticsController],
+  controllers: [
+    HealthController,
+    DiagnosticsController,
+    ProductsController,
+    InventoryController,
+  ],
   providers: [],
 })
 export class AppModule {}

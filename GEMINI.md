@@ -27,6 +27,7 @@ Auto-generated from all feature plans. Last updated: 2026-03-29
 - MySQL 8.0 (Isolated `archkit_product` database) (014-scs-hybrid--product-service)
 - TypeScript 5.7 / Node.js 20+ + NestJS 11 + @nestjs/cqrs + @nestjs/microservices + TypeORM 0.3.28 + Zod 3.x (015-scs-hybrid--inventory-service)
 - MySQL 8.0 (Isolated `archkit_inventory` database) (015-scs-hybrid--inventory-service)
+- MySQL 8.0 (Isolated `archkit_sales` database) (016-scs-hybrid--sales-service)
 
 - TypeScript (Node.js 20+) + NestJS, TypeORM, Zod, MySQL, Kafka, @nestjs/cqrs, TurboRepo (000-pos-architecture-benchmark)
 
@@ -46,9 +47,9 @@ npm test && npm run lint
 TypeScript (Node.js 20+): Follow standard conventions
 
 ## Recent Changes
+- 016-scs-hybrid--sales-service: Added TypeScript 5.7 / Node.js 20+ + NestJS 11 + @nestjs/cqrs + @nestjs/microservices + TypeORM 0.3.28 + Zod 3.x
 - 015-scs-hybrid--inventory-service: Added TypeScript 5.7 / Node.js 20+ + NestJS 11 + @nestjs/cqrs + @nestjs/microservices + TypeORM 0.3.28 + Zod 3.x
 - 014-scs-hybrid--product-service: Added TypeScript 5.7 / Node.js 20+ + NestJS 11, `@nestjs/cqrs`, `@nestjs/microservices` (Kafka), TypeORM 0.3.28, Zod
-- 013-scs-hybrid--setup-database: Added TypeScript 5.7 / Node.js 20+ + NestJS 11, TypeORM 0.3.28, mysql2 3.12.0, Docker, Docker Compose
 
 
 <!-- MANUAL ADDITIONS START -->

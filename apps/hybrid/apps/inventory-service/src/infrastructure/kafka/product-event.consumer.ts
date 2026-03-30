@@ -23,4 +23,15 @@ export class ProductEventConsumer {
       }
     }
   }
+
+  @MessagePattern('product.deleted')
+  async handleProductDeleted(@Payload() data: any) {
+    this.logger.log(`Received product.deleted event: ${JSON.stringify(data)}`);
+    const event = typeof data === 'string' ? JSON.parse(data) : data;
+    const productId = event.id;
+    if (productId) {
+      await this.inventoryRepository.deleteByProductId(productId);
+      this.logger.log(`Removed inventory for deleted product: ${productId}`);
+    }
+  }
 }

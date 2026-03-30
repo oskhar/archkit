@@ -33,6 +33,10 @@ export class InventoryController {
   @Get(':productId')
   async findOne(@Param('productId', ParseUUIDPipe) productId: string) {
     this.logger.log(`Fetching stock for product: ${productId}`);
-    return this.queryBus.execute(new GetStockQuery(productId));
+    const result = await this.queryBus.execute(new GetStockQuery(productId));
+    return {
+      productId: result.productId,
+      quantity: result.quantity,
+    };
   }
 }

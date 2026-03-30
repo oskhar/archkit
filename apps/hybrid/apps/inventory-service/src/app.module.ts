@@ -11,6 +11,7 @@ import { InventoryRepository } from './infrastructure/repositories/inventory.rep
 import { AdjustStockHandler } from './application/commands/adjust-stock.handler';
 import { GetStockHandler } from './application/queries/get-stock.handler';
 import { ProductEventConsumer } from './infrastructure/kafka/product-event.consumer';
+import { SalesEventConsumer } from './infrastructure/kafka/sales-event.consumer';
 
 const Handlers = [AdjustStockHandler, GetStockHandler];
 
@@ -43,6 +44,7 @@ const Handlers = [AdjustStockHandler, GetStockHandler];
     ConnectivityController,
     InventoryController,
     ProductEventConsumer,
+    SalesEventConsumer,
   ],
   providers: [InventoryRepository, ...Handlers],
 })

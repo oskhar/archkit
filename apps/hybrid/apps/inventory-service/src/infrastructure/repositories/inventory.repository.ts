@@ -40,4 +40,8 @@ export class InventoryRepository {
     });
     return this.repository.save(inventory);
   }
+
+  async deleteByProductId(productId: string): Promise<void> {
+    await this.repository.delete({ productId });
+  }
 }

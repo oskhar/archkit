@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
-export const CreateSaleSchema = z.object({
-  items: z.array(
-    z.object({
-      productId: z.string().uuid(),
-      quantity: z.number().int().positive(),
-    }),
-  ).min(1),
+export const SalesItemSchema = z.object({
+  productId: z.string().uuid(),
+  quantity: z.number().int().positive(),
 });
 
-export type CreateSaleDto = z.infer<typeof CreateSaleSchema>;
+export const CreateTransactionSchema = z.object({
+  items: z.array(SalesItemSchema).nonempty(),
+});
+
+export type CreateTransactionDto = z.infer<typeof CreateTransactionSchema>;

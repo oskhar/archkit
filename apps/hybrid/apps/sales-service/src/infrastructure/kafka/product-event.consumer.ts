@@ -34,4 +34,15 @@ export class ProductEventConsumer {
       price: product.price,
     });
   }
+
+  @MessagePattern('product.deleted')
+  async handleProductDeleted(@Payload() data: any) {
+    this.logger.log(`Received product.deleted event: ${JSON.stringify(data)}`);
+    const event = typeof data === 'string' ? JSON.parse(data) : data;
+    const productId = event.id;
+    if (productId) {
+      await this.productCacheRepository.delete(productId);
+      this.logger.log(`Removed product ${productId} from cache`);
+    }
+  }
 }

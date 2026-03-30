@@ -7,6 +7,8 @@ import databaseConfig from './config/database.config';
 import { ProductModule } from './product/product.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { SalesModule } from './sales/sales.module';
+import { HealthController } from './common/health.controller';
+import { DiagnosticsController } from './common/diagnostics.controller';
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import { SalesModule } from './sales/sales.module';
     InventoryModule,
     SalesModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, HealthController, DiagnosticsController],
   providers: [AppService],
 })
 export class AppModule {}

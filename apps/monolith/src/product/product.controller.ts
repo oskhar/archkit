@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UsePipes,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import type { CreateProductDto, UpdateProductDto } from './dto/product.dto';
@@ -40,6 +42,7 @@ export class ProductController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
     return this.productService.remove(id);
   }

@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
 export const CreateProductSchema = z.object({
-  name: z.string().min(1),
+  name: z.string().min(1).max(255),
   price: z.number().positive(),
 });
 
 export const UpdateProductSchema = z.object({
-  name: z.string().min(1).optional(),
+  name: z.string().min(1).max(255).optional(),
   price: z.number().positive().optional(),
 });
 

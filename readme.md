@@ -79,16 +79,25 @@ All details are documented in `collaboration_guide.md`.
 - Monorepo bootstrapping
 - Teams learning proper Git practices
 
-## License
+## Project Architectures
 
-MIT — free to use, modify, and adapt.
+This project implements the same business logic in two different architectural patterns to compare development complexity:
 
-## Tip 🧩
+1.  **Monolith**: A NestJS modular monolith using TypeORM and Zod for validation.
+2.  **Hybrid**: A microservices-based architecture using NestJS, CQRS, and Kafka for event-driven communication.
 
-Clone this template and make your first commit with:
+### Architecture Parity
 
-```bash
-git cz
-```
+Both architectures are aligned to provide the same API endpoints and domain capabilities:
 
-You’ll immediately notice a cleaner, more structured workflow.
+-   **Diagnostic Endpoints**:
+    -   `GET /health`: Service health status
+    -   `GET /diagnostics/ping`: Connectivity check
+-   **Product Domain**:
+    -   `POST /products`, `GET /products`, `GET /products/:id`, `PATCH /products/:id`, `DELETE /products/:id`
+-   **Sales Domain**:
+    -   `POST /sales/transaction`, `GET /sales/transactions/:id`
+-   **Inventory Domain**:
+    -   `POST /inventory/adjust`, `GET /inventory/:productId`
+
+For detailed verification steps, see [Architecture Parity Verification](./specs/017-architecture-parity-alignment/quickstart.md).

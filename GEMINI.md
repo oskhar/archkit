@@ -1,6 +1,6 @@
 # archkit Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-03-29
+Auto-generated from all feature plans. Last updated: 2026-03-30
 
 ## Active Technologies
 - MySQL (isolated per service in Hybrid, shared in Monolith) (000-pos-architecture-benchmark)
@@ -28,6 +28,10 @@ Auto-generated from all feature plans. Last updated: 2026-03-29
 - TypeScript 5.7 / Node.js 20+ + NestJS 11 + @nestjs/cqrs + @nestjs/microservices + TypeORM 0.3.28 + Zod 3.x (015-scs-hybrid--inventory-service)
 - MySQL 8.0 (Isolated `archkit_inventory` database) (015-scs-hybrid--inventory-service)
 - MySQL 8.0 (Isolated `archkit_sales` database) (016-scs-hybrid--sales-service)
+- TypeScript 5.7 / Node.js 20+ + NestJS 11, TypeORM 0.3.28, Zod 3.x, @nestjs/cqrs (Hybrid), @nestjs/microservices (Kafka, Hybrid) (017-architecture-parity-alignment)
+- MySQL 8.0 (Isolated per service in Hybrid, single DB in Monolith) (017-architecture-parity-alignment)
+- TypeScript 5.7 / Node.js 20+ + NestJS 11, Zod 3.x, js-yaml (for generation) (017-architecture-parity-alignment)
+- N/A (Documentation) (017-architecture-parity-alignment)
 
 - TypeScript (Node.js 20+) + NestJS, TypeORM, Zod, MySQL, Kafka, @nestjs/cqrs, TurboRepo (000-pos-architecture-benchmark)
 
@@ -47,9 +51,9 @@ npm test && npm run lint
 TypeScript (Node.js 20+): Follow standard conventions
 
 ## Recent Changes
+- 017-architecture-parity-alignment: Added TypeScript 5.7 / Node.js 20+ + NestJS 11, Zod 3.x, js-yaml (for generation)
+- 017-architecture-parity-alignment: Added TypeScript 5.7 / Node.js 20+ + NestJS 11, TypeORM 0.3.28, Zod 3.x, @nestjs/cqrs (Hybrid), @nestjs/microservices (Kafka, Hybrid)
 - 016-scs-hybrid--sales-service: Added TypeScript 5.7 / Node.js 20+ + NestJS 11 + @nestjs/cqrs + @nestjs/microservices + TypeORM 0.3.28 + Zod 3.x
-- 015-scs-hybrid--inventory-service: Added TypeScript 5.7 / Node.js 20+ + NestJS 11 + @nestjs/cqrs + @nestjs/microservices + TypeORM 0.3.28 + Zod 3.x
-- 014-scs-hybrid--product-service: Added TypeScript 5.7 / Node.js 20+ + NestJS 11, `@nestjs/cqrs`, `@nestjs/microservices` (Kafka), TypeORM 0.3.28, Zod
 
 
 <!-- MANUAL ADDITIONS START -->

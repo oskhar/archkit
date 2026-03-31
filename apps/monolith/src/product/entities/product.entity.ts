@@ -8,4 +8,10 @@ export class Product extends BaseEntity {
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
+
+  @Column({ type: 'text', nullable: true })
+  description?: string;
+
+  @Column({ length: 50 })
+  category: string;
 }

@@ -1,6 +1,6 @@
 # archkit Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-03-30
+Auto-generated from all feature plans. Last updated: 2026-03-31
 
 ## Active Technologies
 - MySQL (isolated per service in Hybrid, shared in Monolith) (000-pos-architecture-benchmark)
@@ -32,6 +32,13 @@ Auto-generated from all feature plans. Last updated: 2026-03-30
 - MySQL 8.0 (Isolated per service in Hybrid, single DB in Monolith) (017-architecture-parity-alignment)
 - TypeScript 5.7 / Node.js 20+ + NestJS 11, Zod 3.x, js-yaml (for generation) (017-architecture-parity-alignment)
 - N/A (Documentation) (017-architecture-parity-alignment)
+- TypeScript 5.7 / Node.js 20+ + NestJS 11, TypeORM 0.3.28, Zod 3.x, RabbitMQ, Kafka, TurboRepo (018-refine-pos-benchmark)
+- MySQL 8.0, PostgreSQL (Event Store) (018-refine-pos-benchmark)
+- TypeScript 5.7 / Node.js 20+ + NestJS 11, TypeORM 0.3.28, Zod 3.x, RabbitMQ, Kafka, TurboRepo, Artillery, Chart.js (or similar for graph generation) (018-refine-pos-benchmark)
+- TypeScript 5.7 (Node.js 20+) + NestJS 11, TypeORM 0.3.28, Zod 3.x, KafkaJS, TurboRepo, Artillery (018-refine-pos-benchmark)
+- TypeScript 5.7 + Chart.js 4.x, chartjs-node-canvas, Artillery (018-refine-pos-benchmark)
+- TypeScript 5.7 / Node.js 20+ + NestJS 11, TypeORM 0.3.28, Zod 3.x, KafkaJS, TurboRepo, Artillery, Chart.js 4.x, PlantUML (018-refine-pos-benchmark)
+- MySQL 8.0 (Isolated per service in Hybrid, single DB in Monolith), PostgreSQL (Event Store) (018-refine-pos-benchmark)
 
 - TypeScript (Node.js 20+) + NestJS, TypeORM, Zod, MySQL, Kafka, @nestjs/cqrs, TurboRepo (000-pos-architecture-benchmark)
 
@@ -51,9 +58,9 @@ npm test && npm run lint
 TypeScript (Node.js 20+): Follow standard conventions
 
 ## Recent Changes
-- 017-architecture-parity-alignment: Added TypeScript 5.7 / Node.js 20+ + NestJS 11, Zod 3.x, js-yaml (for generation)
-- 017-architecture-parity-alignment: Added TypeScript 5.7 / Node.js 20+ + NestJS 11, TypeORM 0.3.28, Zod 3.x, @nestjs/cqrs (Hybrid), @nestjs/microservices (Kafka, Hybrid)
-- 016-scs-hybrid--sales-service: Added TypeScript 5.7 / Node.js 20+ + NestJS 11 + @nestjs/cqrs + @nestjs/microservices + TypeORM 0.3.28 + Zod 3.x
+- 018-refine-pos-benchmark: Added TypeScript 5.7 / Node.js 20+ + NestJS 11, TypeORM 0.3.28, Zod 3.x, KafkaJS, TurboRepo, Artillery, Chart.js 4.x, PlantUML
+- 018-refine-pos-benchmark: Added TypeScript 5.7 + Chart.js 4.x, chartjs-node-canvas, Artillery
+- 018-refine-pos-benchmark: Added TypeScript 5.7 (Node.js 20+) + NestJS 11, TypeORM 0.3.28, Zod 3.x, KafkaJS, TurboRepo, Artillery
 
 
 <!-- MANUAL ADDITIONS START -->

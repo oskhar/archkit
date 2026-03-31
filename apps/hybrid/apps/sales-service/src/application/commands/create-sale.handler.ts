@@ -1,10 +1,10 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Inject, BadRequestException } from '@nestjs/common';
+import { Inject, BadRequestException, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { ProductCache } from '../../../domain/entities/product-cache.entity';
-import { SalesRepository } from '../../../infrastructure/repositories/sales.repository';
+import { ProductCache } from '../../domain/entities/product-cache.entity';
+import { SalesRepository } from '../../infrastructure/repositories/sales.repository';
 
 export class CreateSaleCommand {
   constructor(
@@ -13,7 +13,7 @@ export class CreateSaleCommand {
 }
 
 @CommandHandler(CreateSaleCommand)
-export class CreateSaleHandler implements ICommandHandler<CreateSaleCommand> {
+export class CreateSaleHandler implements ICommandHandler<CreateSaleCommand>, OnModuleInit {
   constructor(
     @InjectRepository(ProductCache)
     private readonly productCacheRepository: Repository<ProductCache>,
@@ -21,6 +21,11 @@ export class CreateSaleHandler implements ICommandHandler<CreateSaleCommand> {
     @Inject('KAFKA_SERVICE')
     private readonly kafkaClient: ClientKafka,
   ) {}
+
+  async onModuleInit() {
+    this.kafkaClient.subscribeToResponseOf('sales.transaction-completed');
+    await this.kafkaClient.connect();
+  }
 
   async execute(command: CreateSaleCommand) {
     const { items: requestItems } = command;

@@ -26,6 +26,7 @@ export class InventoryRepository {
       inventory.quantity += delta;
     }
 
+    inventory.lastSyncAt = new Date();
     return this.repository.save(inventory);
   }
 

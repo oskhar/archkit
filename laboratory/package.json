@@ -1,0 +1,37 @@
+{
+  "name": "laboratory",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed:monolith": "ts-node src/scripts/seed.ts --architecture MONOLITH",
+    "seed:hybrid": "ts-node src/scripts/seed.ts --architecture HYBRID",
+    "test:us1": "artillery run scenarios/us1-product-lifecycle.yml -o results/us1-results.json",
+    "test:us2": "artillery run scenarios/us2-inventory-sync.yml -o results/us2-results.json",
+    "test:us3": "artillery run scenarios/us3-sales-transaction.yml -o results/us3-results.json",
+    "lab:report": "ts-node src/scripts/generate-report.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.16",
+    "@types/node": "^25.5.0",
+    "@typescript-eslint/eslint-plugin": "^8.57.2",
+    "@typescript-eslint/parser": "^8.57.2",
+    "eslint": "^10.1.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "prettier": "^3.8.1",
+    "ts-node": "^10.9.2",
+    "typescript": "5.7"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "chartjs-node-canvas": "^5.0.0",
+    "mysql2": "^3.20.0",
+    "zod": "^4.3.6"
+  }
+}

@@ -2,24 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CqrsModule } from '@nestjs/cqrs';
-import { KafkaModule } from './infrastructure/kafka.module';
-import { Product } from './domain/product.entity';
-import { CreateProductHandler } from './application/product/commands/create-product.handler';
-import { UpdateProductHandler } from './application/product/commands/update-product.handler';
-import { DeleteProductHandler } from './application/product/commands/delete-product.handler';
-import { GetProductByIdHandler } from './application/product/queries/get-product-by-id.handler';
-import { GetAllProductsHandler } from './application/product/queries/get-all-products.handler';
+import { KafkaModule } from './infrastructure/kafka/kafka.module';
+import { Product } from './domain/entities/product.entity';
+import { CreateProductHandler } from './application/commands/create-product.handler';
+import { GetProductsHandler } from './application/queries/get-products.handler';
 import { HealthController } from './interface/health.controller';
-import { ProductController } from './interface/product.controller';
-import { PingController } from './interface/ping.controller';
-import { PingHandler } from './application/ping/ping.handler';
-
-const CommandHandlers = [
-  CreateProductHandler,
-  UpdateProductHandler,
-  DeleteProductHandler,
-];
-const QueryHandlers = [GetProductByIdHandler, GetAllProductsHandler];
+import { ProductController } from './interface/controllers/product.controller';
+import { ProductProducer } from './infrastructure/kafka/product.producer';
 
 @Module({
   imports: [
@@ -37,7 +26,11 @@ const QueryHandlers = [GetProductByIdHandler, GetAllProductsHandler];
         password: configService.get<string>('DB_PASSWORD', 'archkit_password'),
         database: configService.get<string>('DB_DATABASE', 'archkit_product'),
         entities: [Product],
-        synchronize: true, // For experiment purposes
+        synchronize: true,
+        extra: {
+          connectionLimit: 10,
+        },
+        migrations: ['dist/migrations/*.js'],
       }),
       inject: [ConfigService],
     }),
@@ -45,7 +38,7 @@ const QueryHandlers = [GetProductByIdHandler, GetAllProductsHandler];
     CqrsModule,
     KafkaModule,
   ],
-  controllers: [HealthController, ProductController, PingController],
-  providers: [...CommandHandlers, ...QueryHandlers, PingHandler],
+  controllers: [HealthController, ProductController],
+  providers: [CreateProductHandler, GetProductsHandler, ProductProducer],
 })
 export class AppModule {}

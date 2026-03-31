@@ -21,22 +21,29 @@ describe('ProductController (e2e)', () => {
   it('should create a product (POST /products)', () => {
     return request(app.getHttpServer())
       .post('/products')
-      .send({ name: 'Test Product', price: 10.5 })
+      .send({ 
+        name: 'Test Product', 
+        description: 'Test Description',
+        price: 10.5,
+        category: 'Electronics'
+      })
       .expect(201)
       .expect((res) => {
         expect(res.body.id).toBeDefined();
         expect(res.body.name).toEqual('Test Product');
+        expect(res.body.description).toEqual('Test Description');
         expect(res.body.price).toEqual(10.5);
+        expect(res.body.category).toEqual('Electronics');
       });
   });
 
   it('should get all products (GET /products)', async () => {
     await request(app.getHttpServer())
       .post('/products')
-      .send({ name: 'Product 1', price: 10 });
+      .send({ name: 'Product 1', price: 10, category: 'Cat 1' });
     await request(app.getHttpServer())
       .post('/products')
-      .send({ name: 'Product 2', price: 20 });
+      .send({ name: 'Product 2', price: 20, category: 'Cat 2' });
 
     return request(app.getHttpServer())
       .get('/products')
@@ -49,7 +56,7 @@ describe('ProductController (e2e)', () => {
   it('should get a product by ID (GET /products/:id)', async () => {
     const createRes = await request(app.getHttpServer())
       .post('/products')
-      .send({ name: 'Single Product', price: 15 });
+      .send({ name: 'Single Product', price: 15, category: 'Cat 1' });
     const id = createRes.body.id;
 
     return request(app.getHttpServer())
@@ -64,17 +71,12 @@ describe('ProductController (e2e)', () => {
   it('should update a product (PATCH /products/:id)', async () => {
     const createRes = await request(app.getHttpServer())
       .post('/products')
-      .send({ name: 'Old Name', price: 15 });
+      .send({ name: 'Old Name', price: 15, category: 'Cat 1' });
     const id = createRes.body.id;
 
     return request(app.getHttpServer())
       .patch(`/products/${id}`)
       .send({ name: 'New Name' })
-      .expect((res) => {
-        if (res.status !== 200) {
-          console.log('PATCH failed with:', JSON.stringify(res.body, null, 2));
-        }
-      })
       .expect(200)
       .expect((res) => {
         expect(res.body.name).toEqual('New Name');
@@ -84,7 +86,7 @@ describe('ProductController (e2e)', () => {
   it('should delete a product (DELETE /products/:id)', async () => {
     const createRes = await request(app.getHttpServer())
       .post('/products')
-      .send({ name: 'To Delete', price: 15 });
+      .send({ name: 'To Delete', price: 15, category: 'Cat 1' });
     const id = createRes.body.id;
 
     await request(app.getHttpServer()).delete(`/products/${id}`).expect(200);

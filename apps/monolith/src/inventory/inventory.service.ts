@@ -55,6 +55,7 @@ export class InventoryService {
     }
 
     await repo.increment({ productId }, 'quantity', delta);
+    await repo.update({ productId }, { lastSyncAt: new Date() });
 
     // Return updated inventory
     const updatedInventory = await repo.findOneBy({

@@ -2,7 +2,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
-import { Product } from '../../../domain/product.entity';
+import { Product } from '../../../domain/entities/product.entity';
 
 export class GetProductByIdQuery {
   constructor(public readonly id: string) {}

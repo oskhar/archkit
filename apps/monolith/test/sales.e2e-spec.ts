@@ -22,7 +22,7 @@ describe('SalesController (e2e)', () => {
     // 1. Create a product
     const productRes = await request(app.getHttpServer())
       .post('/products')
-      .send({ name: 'Sales Test Product', price: 100 })
+      .send({ name: 'Sales Test Product', price: 100, category: 'Test' })
       .expect(201);
 
     const productId = productRes.body.id;
@@ -70,7 +70,7 @@ describe('SalesController (e2e)', () => {
     // 1. Create a product
     const productRes = await request(app.getHttpServer())
       .post('/products')
-      .send({ name: 'Limited Product', price: 100 })
+      .send({ name: 'Limited Product', price: 100, category: 'Test' })
       .expect(201);
     const productId = productRes.body.id;
 

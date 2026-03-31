@@ -48,9 +48,10 @@ description: "Task list template for feature implementation"
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project structure per implementation plan
-- [ ] T002 Initialize [language] project with [framework] dependencies
-- [ ] T003 [P] Configure linting and formatting tools
+- [ ] T001 [P] Create project structure per implementation plan
+- [ ] T002 [P] Initialize [language] project with [framework] dependencies
+- [ ] T003 [P] **AS-IS Capture**: Document existing behavior in `spec.md` (if applicable)
+- [ ] T004 [P] Configure linting and formatting tools
 
 ---
 

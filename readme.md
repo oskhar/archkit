@@ -79,6 +79,17 @@ All details are documented in `collaboration_guide.md`.
 - Monorepo bootstrapping
 - Teams learning proper Git practices
 
+## 📜 Governance
+
+This project is governed by the [**Project Constitution**](.specify/memory/constitution.md). 
+
+All contributions must adhere to:
+- **Experiment Integrity**: Maintaining comparability between Monolith and Hybrid implementations.
+- **SCS Discipline**: Atomic changesets tracked via mandatory branch naming.
+- **Architecture Parity**: Alignment with the shared OpenAPI specification.
+
+Refer to the constitution for detailed rules, metrics requirements, and architectural constraints.
+
 ## Project Architectures
 
 This project implements the same business logic in two different architectural patterns to compare development complexity:

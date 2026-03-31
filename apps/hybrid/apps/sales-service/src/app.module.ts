@@ -30,6 +30,10 @@ import { GetSaleHandler } from './application/queries/get-sale.handler';
         database: configService.get<string>('DB_DATABASE', 'archkit_sales'),
         entities: [SalesTransaction, SalesItem, ProductCache],
         synchronize: true, // For experiment purposes
+        extra: {
+          connectionLimit: 10,
+        },
+        migrations: ['dist/migrations/*.js'],
       }),
       inject: [ConfigService],
     }),

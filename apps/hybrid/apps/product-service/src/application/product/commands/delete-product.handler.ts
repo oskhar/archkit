@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Inject, NotFoundException } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { Product } from '../../../domain/product.entity';
+import { Product } from '../../../domain/entities/product.entity';
 
 export class DeleteProductCommand {
   constructor(public readonly id: string) {}

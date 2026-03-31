@@ -1,0 +1,26 @@
+import { z } from 'zod';
+
+export const ArtilleryOutputSchema = z.object({
+  aggregate: z.object({
+    summaries: z.record(z.string(), z.object({
+      min: z.number().optional(),
+      max: z.number().optional(),
+      count: z.number().optional(),
+      p50: z.number(),
+      median: z.number().optional(),
+      p75: z.number().optional(),
+      p90: z.number().optional(),
+      p95: z.number(),
+      p99: z.number(),
+      p999: z.number().optional()
+    })),
+    counters: z.record(z.string(), z.number()),
+    rates: z.record(z.string(), z.number()),
+    firstCounterAt: z.number().optional(),
+    lastCounterAt: z.number().optional(),
+    firstSummaryAt: z.number().optional(),
+    lastSummaryAt: z.number().optional()
+  })
+});
+
+export type ArtilleryOutput = z.infer<typeof ArtilleryOutputSchema>;

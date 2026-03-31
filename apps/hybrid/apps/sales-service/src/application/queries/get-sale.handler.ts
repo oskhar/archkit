@@ -1,5 +1,5 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { SalesRepository } from '../../../infrastructure/repositories/sales.repository';
+import { SalesRepository } from '../../infrastructure/repositories/sales.repository';
 
 export class GetSaleQuery {
   constructor(public readonly id: string) {}

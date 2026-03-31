@@ -31,7 +31,14 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] **I. Experiment Integrity**: Does this implementation maintain architecture parity?
+- [ ] **II. SCS Discipline**: Is this branch strictly one SCS? No scope creep?
+- [ ] **III. Architecture Parity**: Are both Monolith and Hybrid implementations equivalent?
+- [ ] **V. Metrics**: Are measurement points identified for all mandatory metrics?
+- [ ] **VI-VII. Spec & Verification**: Is AS-IS captured? Are tests written FIRST?
+- [ ] **VIII. Research**: Are research links included in the spec?
+
+[Detailed gates or exceptions determined based on constitution file]
 
 ## Project Structure
 

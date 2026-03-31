@@ -208,3 +208,246 @@ Can be tested by:
 * Infrastructure (Kafka, DB) is stable during experiment
 * No external load testing is required (focus is development complexity, not runtime performance)
 * Monolith and hybrid share equivalent domain logic
+
+## AS-IS Specification (Behavioral Truth Layer)
+
+This section captures the actual system behavior as implemented.
+
+### Scope
+
+Covers:
+
+* Product domain behavior
+* Inventory domain behavior
+* Sales domain behavior
+* Hybrid event flow behavior
+* Metric collection behavior
+
+
+### AS-IS Behavioral Rules
+
+#### Product Domain
+
+* Product creation persists data without enforcing uniqueness beyond database constraints.
+* Product update overwrites previous state (no versioning).
+
+#### Inventory Domain
+
+* Stock can become negative.
+* No strict constraint prevents overselling.
+* Stock updates are not guaranteed to be atomic across concurrent transactions.
+
+#### Sales Domain
+
+* Transaction reduces stock immediately (monolith) or eventually (hybrid).
+* No rollback mechanism when downstream failure occurs.
+* Transactions are recorded regardless of stock validity.
+
+#### Hybrid Architecture Behavior
+
+* Event delivery is eventually consistent.
+* Message delay is tolerated.
+* Out-of-order events may occur and must be tolerated.
+* Failure handling relies on DLQ.
+
+#### Concurrency Behavior
+
+* Last write wins strategy is applied.
+* Losing transactions are not retried automatically.
+* Conflicts are logged but not resolved.
+
+
+### Known Issues (MUST NOT BE FIXED HERE)
+
+* Potential stock inconsistency under concurrent transactions.
+* Event duplication or reprocessing risk.
+* Temporary divergence between services in hybrid architecture.
+* Lack of strong transactional guarantees across domains.
+
+
+### Behavioral Uncertainty (Explicitly Unknown)
+
+* Exact consistency guarantees under high concurrency.
+* Failure propagation across services.
+* Data reconciliation strategy after DLQ reprocessing.
+
+
+## TO-BE Specification (Research-Aligned Target)
+
+Derived strictly from `docs/research.md`.
+
+
+### Intended Improvements
+
+#### Consistency Model
+
+* Define explicit consistency boundaries:
+
+  * Strong consistency for monolith
+  * Eventual consistency with guarantees for hybrid
+
+#### Concurrency Handling
+
+* Introduce conflict detection strategy:
+
+  * versioning or optimistic locking
+* Define retry or compensation behavior
+
+#### Event Reliability
+
+* Ensure:
+
+  * idempotency
+  * deduplication
+  * retry policy
+* DLQ must support deterministic recovery
+
+#### Observability
+
+* All events and state transitions must be traceable
+* Metrics must include:
+
+  * event latency
+  * processing lag
+  * failure rate
+
+#### Metric Accuracy
+
+* Ensure measurement is not biased by:
+
+  * hidden refactors
+  * inconsistent commit granularity
+
+
+### Constraints
+
+* Improvements MUST NOT break architecture parity
+* Improvements MUST be applicable to both architectures
+* Any asymmetry MUST be documented
+
+
+## Gap Analysis (AS-IS vs TO-BE)
+
+### Consistency
+
+* AS-IS: implicit, weak guarantees
+* TO-BE: explicit, measurable guarantees
+
+Risk:
+High — may change system behavior significantly
+
+
+### Concurrency
+
+* AS-IS: last write wins
+* TO-BE: conflict-aware strategy
+
+Risk:
+Medium — may impact transaction flow
+
+
+### Event Handling
+
+* AS-IS: basic DLQ recovery
+* TO-BE: deterministic and idempotent processing
+
+Risk:
+High — affects hybrid reliability
+
+
+### Observability
+
+* AS-IS: limited to logs
+* TO-BE: structured tracing & metrics
+
+Risk:
+Low — additive
+
+
+## Verification Strategy
+
+### AS-IS (Characterization Tests)
+
+Purpose:
+Capture current behavior without modification.
+
+Examples:
+
+* Verify negative stock is allowed
+* Verify last write wins behavior
+* Verify event delay does not block system
+
+
+### TO-BE (Validation Tests)
+
+Purpose:
+Validate research-aligned improvements.
+
+Examples:
+
+* Conflict detection prevents silent overwrite
+* Event deduplication prevents double processing
+* Metrics accurately reflect system activity
+
+
+## Laboratory Preparation Specification
+
+This spec will be used to construct a **laboratory environment**.
+
+### Requirements
+
+* Must simulate:
+
+  * concurrent transactions
+  * event delays
+  * service failures
+* Must compare:
+
+  * monolith vs hybrid behavior
+* Must produce:
+
+  * reproducible results
+
+
+### Inputs
+
+* AS-IS spec
+* TO-BE spec
+* Research hypotheses (docs/research.md)
+
+
+### Outputs
+
+* behavioral comparison
+* metric comparison
+* deviation report
+
+
+## Spec Traceability Matrix
+
+Every element must map to:
+
+| Spec Item      | Source                            |
+| -------------- | --------------------------------- |
+| AS-IS behavior | implementation                    |
+| TO-BE behavior | docs/research.md                  |
+| Metrics        | git history / measurement scripts |
+
+
+## Risk Register
+
+* Hidden divergence between architectures
+* Measurement bias due to developer behavior
+* Overfitting implementation to research expectations
+* Misinterpretation of eventual consistency
+
+Version: 1.1.0 | Updated: 2026-03-30
+
+Changes:
+- Introduced AS-IS specification layer (behavioral truth)
+- Introduced TO-BE specification (research-aligned)
+- Added explicit gap analysis
+- Added verification strategy (characterization vs validation)
+- Added laboratory preparation specification
+- Added traceability requirements
+- Added risk register

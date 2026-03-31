@@ -1,4 +1,17 @@
 services:
+  mysql-monolith:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: archkit_monolith
+      MYSQL_USER: archkit_user
+      MYSQL_PASSWORD: archkit_password
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_monolith_data:/var/lib/mysql
+
   mysql-product:
     image: mysql:8.0
     restart: always
@@ -57,6 +70,7 @@ services:
       - redpanda_data:/var/lib/redpanda/data
 
 volumes:
+  mysql_monolith_data:
   mysql_product_data:
   mysql_inventory_data:
   mysql_sales_data:

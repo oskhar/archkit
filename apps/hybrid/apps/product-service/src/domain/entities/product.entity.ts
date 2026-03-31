@@ -1,5 +1,5 @@
 import { Entity, Column } from 'typeorm';
-import { BaseEntity } from './base.entity';
+import { BaseEntity } from '../base.entity';
 
 @Entity('products')
 export class Product extends BaseEntity {
@@ -8,4 +8,10 @@ export class Product extends BaseEntity {
 
   @Column('decimal', { precision: 10, scale: 2 })
   price!: number;
+
+  @Column('text', { nullable: true })
+  description?: string;
+
+  @Column({ length: 50 })
+  category!: string;
 }

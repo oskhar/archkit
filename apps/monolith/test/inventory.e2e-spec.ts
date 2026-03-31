@@ -22,7 +22,7 @@ describe('InventoryController (e2e)', () => {
     // 1. Create a product
     const createProductRes = await request(app.getHttpServer())
       .post('/products')
-      .send({ name: 'E2E Test Product', price: 9.99 })
+      .send({ name: 'E2E Test Product', price: 9.99, category: 'Test' })
       .expect(201);
 
     const productId = createProductRes.body.id;
@@ -75,7 +75,7 @@ describe('InventoryController (e2e)', () => {
     // 1. Create a product
     const createProductRes = await request(app.getHttpServer())
       .post('/products')
-      .send({ name: 'Concurrent Product', price: 10 })
+      .send({ name: 'Concurrent Product', price: 10, category: 'Test' })
       .expect(201);
     const productId = createProductRes.body.id;
 
@@ -99,7 +99,7 @@ describe('InventoryController (e2e)', () => {
     // 1. Create a product
     const createProductRes = await request(app.getHttpServer())
       .post('/products')
-      .send({ name: 'Insufficient Stock Product', price: 10 })
+      .send({ name: 'Insufficient Stock Product', price: 10, category: 'Test' })
       .expect(201);
     const productId = createProductRes.body.id;
 

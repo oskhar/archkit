@@ -32,6 +32,10 @@ const Handlers = [AdjustStockHandler, GetStockHandler];
         database: configService.get<string>('DB_DATABASE', 'archkit_inventory'),
         entities: [Inventory],
         synchronize: true, // For experiment purposes
+        extra: {
+          connectionLimit: 10,
+        },
+        migrations: ['dist/migrations/*.js'],
       }),
       inject: [ConfigService],
     }),

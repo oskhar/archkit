@@ -10,6 +10,9 @@ export class Inventory extends BaseEntity {
   @Column({ type: 'int', default: 0 })
   quantity: number;
 
+  @Column({ type: 'timestamp', nullable: true })
+  lastSyncAt: Date;
+
   @OneToOne(() => Product)
   @JoinColumn({ name: 'productId' })
   product: Product;

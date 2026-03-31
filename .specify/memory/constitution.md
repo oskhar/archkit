@@ -1,204 +1,201 @@
+<!--
+SYNC IMPACT REPORT
+- Version change: 1.1.0 → 1.2.0
+- List of modified principles:
+  - All principles refined for improved declarative strength and technical precision.
+  - Principle III: Clarified hybrid architecture tech stack (TurboRepo, NestJS, Kafka).
+  - Principle V: Added "Lead time per SCS" and "Time between commits" to mandatory metrics.
+  - Principle VI-XII: Strengthened language regarding AS-IS/TO-BE separation and laboratory isolation.
+- Added sections: None
+- Removed sections: None
+- Templates requiring updates:
+  - ✅ .specify/templates/spec-template.md (Updated to include Research Linkage placeholder)
+  - ✅ .specify/templates/plan-template.md (Updated Constitution Check guidance)
+- Follow-up TODOs: None
+-->
 # archkit Constitution
 
 ## Core Principles
 
 ### I. Experiment Integrity (NON-NEGOTIABLE)
-
-This repository exists to evaluate development complexity across architectures.
+This repository exists to evaluate development complexity across architectures. Every action MUST preserve the scientific validity of the comparison.
 
 Rules:
-
-* The same business capability must be implemented in both architectures.
+* The same business capability MUST be implemented in both architectures using equivalent logic.
 * No feature advantage allowed in one architecture that does not exist in the other.
-* Any deviation must be explicitly documented in the experiment notes.
-* Changes must preserve comparability between implementations.
+* Any deviation MUST be explicitly documented in the experiment notes.
+* Changes MUST preserve comparability between implementations.
 
-Objective:
-Ensure results measure architectural impact, not developer bias.
+Rationale:
+Ensure results measure architectural impact, not developer bias or implementation variance.
 
 ### II. Strict Smallest Change Set (SCS) Discipline
-
-Every branch represents exactly one Smallest Change Set.
+Every branch represents exactly one Smallest Change Set to minimize variables during complexity measurement.
 
 Rules:
-
 * One branch = one SCS.
 * No mixed concerns in a single branch.
-* Each commit must be atomic and purposeful.
+* Each commit MUST be atomic and purposeful.
 * No opportunistic refactoring.
-* Branch names must follow predefined experiment naming.
-
-Measurement requirements:
-
-* Files changed must be measurable.
-* Code changes must remain scoped.
-* Commit history must reflect actual development flow.
+* Branch names MUST follow predefined experiment naming: `scs-[architecture]--[feature-name]`.
 
 Purpose:
-Enable accurate measurement of development complexity.
-
+Enable accurate, granular measurement of development complexity and traceability.
 
 ### III. Architecture Parity
+Both architectures MUST implement the same domain capabilities using their respective idiomatic patterns.
 
-Both architectures must implement the same domain capabilities.
-
-Monolith architecture:
-
+**Monolith Architecture**:
 * NestJS modular monolith
-* TypeORM
+* TypeORM (MySQL 8.0)
 * Zod DTO validation
-* MySQL
 
-Hybrid architecture:
-
-* Microservices per domain
-* CQRS
-* Event sourcing
-* Kafka as transport
-* NestJS + @nestjs/cqrs
-* TypeORM
-* Zod DTO validation
-* MySQL
+**Hybrid Architecture**:
+* Microservices per domain (TurboRepo + NestJS)
+* CQRS + Event Sourcing patterns
+* Kafka (Redpanda) as the event transport
+* TypeORM (Independent MySQL instances per service)
 
 Constraint:
-Hybrid architecture must not introduce unnecessary network chatter or artificial complexity.
-
-Goal:
-Compare complexity fairly, not exaggerate architectural benefits.
-
+Hybrid architecture MUST NOT introduce artificial complexity. It MUST represent a production-grade microservices implementation.
 
 ### IV. Vertical Slice Domain Ownership
-
-The system must be decomposed by subdomain.
+The system MUST be decomposed by subdomain to preserve realistic boundaries.
 
 Domains:
-
-* Product (item management)
-* Inventory (stock management)
-* Sales (transaction processing)
+* **Product**: Item management and catalog.
+* **Inventory**: Stock level management and reservations.
+* **Sales**: Transaction processing and order fulfillment.
 
 Rules:
-
-* Each domain owns its logic and boundaries.
-* Cross-domain interaction must be explicit.
-* Domain leakage is prohibited.
-
-Hybrid architecture constraint:
-Services must communicate via event-driven contracts.
-
-Purpose:
-Preserve realistic architectural structure.
-
+* Each domain owns its logic, data, and boundaries.
+* Cross-domain interaction MUST be explicit and contract-based.
+* Domain leakage (direct DB access to another domain) is PROHIBITED.
 
 ### V. Measurable Development Complexity
+All development MUST produce measurable signals for objective analysis.
 
-All development must produce measurable signals.
-
-Metrics required:
-
-* Number of files touched per SCS
-* Lines of code changed
-* Lead time per SCS
-* Number of commits per SCS
-* Time between commits
-
-Measurement must be automated where possible.
+Mandatory Metrics:
+* Number of files touched per SCS.
+* Lines of code (LOC) changed (added/removed/modified).
+* Lead time per SCS (start to merge).
+* Number of commits per SCS.
+* Time interval between commits.
 
 Rules:
+* No squashing commits during the experiment.
+* Commit timestamps MUST reflect actual work intervals.
+* Measurement MUST be automated via instrumentation where possible.
 
-* No squashing commits during experiment.
-* Commit timestamps must reflect actual work.
-* Metrics must be reproducible.
+### VI. Spec Integrity & Dual-Spec System (MANDATORY)
+The system MUST maintain two distinct specification layers to prevent behavioral drift.
 
-Goal:
-Provide objective comparison between architectures.
+#### AS-IS Specification (Source of Truth)
+Represents the ACTUAL behavior of the system as implemented.
+* MUST reflect real system behavior, including bugs or inconsistencies.
+* MUST NOT be normalized or idealized.
+* MUST be validated through characterization tests.
 
+#### TO-BE Specification (Research-Aligned Target)
+Represents the INTENDED behavior derived from architectural research.
+* MUST be explicitly derived from `docs/research.md`.
+* MUST define improvements, constraints, and expected guarantees.
+* MUST include justification from research citations.
+
+Constraint:
+AS-IS and TO-BE specs MUST NEVER be merged or blurred. Violation invalidates experiment integrity.
+
+### VII. Verification Before Modification (CRITICAL)
+No implementation change is permitted without prior behavioral verification.
+
+Rules:
+* Existing behavior MUST be captured in AS-IS spec before modification.
+* Characterization tests MUST be created before any refactor or improvement.
+* Changes MUST be validated against BOTH AS-IS tests (regression) and TO-BE tests (success).
+
+Prohibited:
+* Direct refactoring without behavioral capture.
+* Silent behavior changes.
+
+### VIII. Research Alignment Discipline
+Research serves as a guiding reference, not an absolute truth to be followed blindly.
+
+Rules:
+* Research-driven changes MUST reference specific sections of `docs/research.md`.
+* Contradictions between implementation and research MUST be documented, not hidden.
+* Alignment labels MUST be used: `[ALIGNED]`, `[DIVERGENT]`, `[UNVERIFIED]`.
+
+### IX. Controlled Improvement Protocol
+All improvements MUST be explicit, measurable, and reversible.
+
+Rules:
+* Improvements MUST originate from a TO-BE specification.
+* Each improvement MUST define its expected behavioral impact.
+* Improvements MUST be implemented as new, isolated SCS branches.
+
+### X. Laboratory Isolation Layer
+A dedicated "laboratory" environment MUST be used for experimental validation.
+
+Rules:
+* Laboratory code MUST NOT alter production implementation directly.
+* Laboratory MUST simulate scenarios defined in research using AS-IS/TO-BE inputs.
+* Results MUST be reproducible and isolated from the core system state.
+
+### XI. Spec Traceability Requirement
+All specifications MUST be traceable to either implementation or research.
+
+Rules:
+* Each spec item MUST link to a code reference or a `docs/research.md` section.
+* Orphan specifications are invalid and MUST be flagged.
+
+### XII. Experiment Integrity Extension (Symmetry)
+Ensures fairness across the multi-architecture comparison.
+
+Rules:
+* Improvements MUST be applied symmetrically across architectures.
+* Any asymmetry MUST be explicitly justified with an impact analysis.
+* Verification results MUST be comparable using identical test suites where possible.
 
 ## Architectural Constraints
 
-Repository model:
-Single repository experiment.
+**Repository Model**: Single repository (Monorepo) containing isolated architectures.
 
-Structure must separate implementations clearly.
-
-Example structure:
-
-monolith/
-- src/
-
-hybrid/
-- turbo.json
-- apps/
--- api-gateway/
--- product/
--- inventory/
--- sales/
-
+**Structure**:
+```text
+apps/
+├── monolith/   # NestJS Modular Monolith
+└── hybrid/     # TurboRepo Microservices
+    ├── apps/   # Services (Product, Inventory, Sales)
+    └── packages/ # Shared Contracts/Internal Libs
+```
 
 Rules:
-
-* Shared code must remain minimal.
-* Domains must remain isolated.
-* Hybrid architecture must avoid tight coupling.
-
-Performance constraint:
-Event communication must not become a bottleneck due to poor design.
-
+* Shared code between Monolith and Hybrid MUST be strictly limited to contracts or constants.
+* Hybrid services MUST communicate via event-driven contracts (Kafka).
 
 ## Development Workflow
 
-Branching model (MANDATORY):
+**Branching Model (MANDATORY)**:
+* Baseline: `scs-baseline--[domain]`
+* Hybrid: `scs-hybrid--[service]`
 
-Baseline Architecture
-
-* scs-baseline--setup-nestjs
-* scs-baseline--setup-database
-* scs-baseline--product-domain
-* scs-baseline--inventory-domain
-* scs-baseline--sales-domain
-
-Hybrid Architecture
-
-* scs-hybrid--setup-turbo
-* scs-hybrid--setup-nestjs
-* scs-hybrid--setup-kafka
-* scs-hybrid--setup-database
-* scs-hybrid--product-service
-* scs-hybrid--inventory-service
-* scs-hybrid--sales-service
-
-Workflow rules:
-
-1. Create branch from main.
-2. Implement only the assigned SCS.
-3. Commit incrementally.
-4. Record metrics.
-5. Merge after completion.
-
-Prohibited:
-
-* Mixing SCS.
-* Skipping experiment steps.
-* Refactoring outside scope.
-
+Workflow:
+1. Initialize SCS branch from `main`.
+2. Capture AS-IS behavior (if modifying existing code).
+3. Draft/Update TO-BE Specification.
+4. Implement using TDD (Tests FIRST).
+5. Record metrics and merge.
 
 ## Governance
 
 This constitution overrides personal preferences and ad-hoc development decisions.
 
-All pull requests must validate:
+All Pull Requests MUST validate:
+1. SCS scope compliance (No scope creep).
+2. Architecture parity (Equivalent logic).
+3. Metric validity (Accurate recording).
 
-* SCS scope compliance
-* Architecture parity
-* Metric validity
+**Amendments**:
+Amendments require a Version update (SemVer), justification, and impact analysis on experiment validity.
 
-Amendments to this constitution require:
-
-1. Justification
-2. Impact analysis on experiment validity
-3. Version update
-
-Experiment validity has higher priority than speed.
-
-
-Version: 1.0.0 | Ratified: 2026-03-25 | Last Amended: 2026-03-25
+**Version**: 1.2.0 | **Ratified**: 2026-03-30 | **Last Amended**: 2026-03-30

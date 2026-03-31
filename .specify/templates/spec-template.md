@@ -77,10 +77,16 @@
 
 ## Requirements *(mandatory)*
 
+### Research Alignment
+
 <!--
-  ACTION REQUIRED: The content in this section represents placeholders.
-  Fill them out with the right functional requirements.
+  MANDATORY: Link requirements to research documentation as per Principle VIII.
+  Use alignment labels: [ALIGNED], [DIVERGENT], [UNVERIFIED]
 -->
+
+- **Research Link**: [Link to docs/research.md#section]
+- **Alignment Status**: [ALIGNED/DIVERGENT/UNVERIFIED]
+- **Justification**: [Why this requirement matches or differs from research]
 
 ### Functional Requirements
 

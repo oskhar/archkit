@@ -5,8 +5,8 @@ export const SalesItemSchema = z.object({
   quantity: z.number().int().positive(),
 });
 
-export const CreateTransactionSchema = z.object({
+export const CreateSaleSchema = z.object({
   items: z.array(SalesItemSchema).nonempty(),
 });
 
-export type CreateTransactionDto = z.infer<typeof CreateTransactionSchema>;
+export type CreateSaleDto = z.infer<typeof CreateSaleSchema>;

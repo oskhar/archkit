@@ -12,7 +12,9 @@
     "build": "turbo build",
     "lint": "turbo lint",
     "test": "turbo test",
-    "start:dev": "turbo start:dev --parallel"
+    "start": "turbo run start --parallel",
+    "start:all": "turbo run start --parallel",
+    "start:dev": "turbo run start:dev --parallel"
   },
   "devDependencies": {
     "turbo": "latest"

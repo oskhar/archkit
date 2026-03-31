@@ -1,14 +1,15 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Inject } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
-import { Product } from '../../../domain/product.entity';
+import { Product } from '../../../domain/entities/product.entity';
+import { ProductProducer } from '../../../infrastructure/kafka/product.producer';
 
 export class CreateProductCommand {
   constructor(
     public readonly name: string,
     public readonly price: number,
+    public readonly category: string,
+    public readonly description?: string,
   ) {}
 }
 
@@ -17,16 +18,15 @@ export class CreateProductHandler implements ICommandHandler<CreateProductComman
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
-    @Inject('KAFKA_SERVICE')
-    private readonly kafkaClient: ClientKafka,
+    private readonly productProducer: ProductProducer,
   ) {}
 
   async execute(command: CreateProductCommand): Promise<Product> {
-    const { name, price } = command;
-    const product = this.productRepository.create({ name, price });
+    const { name, price, category, description } = command;
+    const product = this.productRepository.create({ name, price, category, description });
     const savedProduct = await this.productRepository.save(product);
 
-    this.kafkaClient.emit('product.created', JSON.stringify(savedProduct));
+    await this.productProducer.emitProductCreated(savedProduct);
 
     return savedProduct;
   }

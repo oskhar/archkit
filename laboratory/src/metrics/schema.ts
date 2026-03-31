@@ -16,6 +16,12 @@ export const ArtilleryOutputSchema = z.object({
     })),
     counters: z.record(z.string(), z.number()),
     rates: z.record(z.string(), z.number()),
+    vusers: z.object({
+      created: z.number().optional(),
+      completed: z.number().optional(),
+      failed: z.number().optional(),
+      created_by_scenario: z.record(z.string(), z.number()).optional()
+    }).optional(),
     firstCounterAt: z.number().optional(),
     lastCounterAt: z.number().optional(),
     firstSummaryAt: z.number().optional(),

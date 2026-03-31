@@ -1,102 +1,105 @@
-# Tasks: Refine POS Architecture Complexity Benchmark
+---
+
+description: "Task list for Refined POS Architecture Complexity Benchmark implementation"
+---
+
+# Tasks: POS Architecture Complexity Benchmark (Refined)
 
 **Input**: Design documents from `/specs/018-refine-pos-benchmark/`
-**Prerequisites**: plan.md (required), spec.md (required), research.md, data-model.md, contracts/
+**Prerequisites**: plan.md, spec.md, research.md, data-model.md, contracts/interfaces.md
 
-**Tests**: Benchmark results are validated against laboratory reports; no new automated tests are requested for this documentation-focused refinement.
-
-**Organization**: Tasks are grouped by user story to enable independent documentation and validation of each domain (Product, Inventory, Sales).
+**Organization**: Tasks are grouped by user story (Product, Inventory, Sales) to enable independent implementation and testing of each domain's metrics and visualizations.
 
 ## Format: `[ID] [P?] [Story] Description`
 
 - **[P]**: Can run in parallel (different files, no dependencies)
-- **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
+- **[Story]**: Which user story this task belongs to (US1, US2, US3)
 - Include exact file paths in descriptions
 
----
+## Phase 1: Setup (Laboratory Infrastructure)
 
-## Phase 1: Setup (Shared Infrastructure)
+**Purpose**: Project initialization and basic structure refinement.
 
-**Purpose**: Project initialization and basic structure for refinement artifacts.
-
-- [x] T001 [P] Create directory structure for blueprints in `specs/018-refine-pos-benchmark/blueprints/`
-- [x] T002 [P] Initialize PlantUML environment and verify `plantuml` command availability
-- [x] T003 [P] **AS-IS Capture**: Document current `docs/research.md` state for Chapter 4 baseline
-- [x] T004 [P] Configure Chart.js 4.x dependencies in `laboratory/package.json`
+- [X] T001 [P] Configure high-resolution output for `GraphReporter` (2000x1000) in `laboratory/src/reporters/graph-reporter.ts`
+- [X] T002 [P] Implement `DataValidator` to prune incomplete Artillery results in `laboratory/src/metrics/aggregator.ts`
+- [X] T003 [P] Update `ArtilleryOutputSchema` to include `vusers` metrics in `laboratory/src/metrics/schema.ts`
+- [X] T004 [P] Setup `JSONL` logger for git commit intervals in `laboratory/src/metrics/loader.ts`
 
 ---
 
-## Phase 2: Foundational (Blocking Prerequisites)
+## Phase 2: Foundational (Core Metrics & Extraction)
 
-**Purpose**: Core data and styles needed before ANY blueprint or graph can be finalized.
+**Purpose**: Core infrastructure for git and performance metric extraction.
 
-**⚠️ CRITICAL**: No user story documentation can be finalized until this phase is complete.
-
-- [x] T005 [P] Extract commit hashes for Monolith (`b97ab7ee`) and Hybrid (`d1e0f0c8`) with their respective metadata from git history
-- [x] T006 [P] Define shared PlantUML C4 library styles in `specs/018-refine-pos-benchmark/blueprints/styles.puml`
-- [x] T007 [P] Validate laboratory JSON schemas in `specs/018-refine-pos-benchmark/contracts/`
-- [x] T008 [P] Setup environment for high-resolution graph generation in `laboratory/src/reporters/graph-generator.ts`
-
-**Checkpoint**: Foundation ready - architectural blueprints and graphs can now be generated in parallel.
+- [X] T005 [P] Implement `getGitMetrics` with `execSync` for lead time and churn in `laboratory/src/metrics/aggregator.ts`
+- [X] T006 [P] Implement `calculateCommitIntervals` logic in `laboratory/src/metrics/calculator.ts`
+- [X] T007 [P] Enhance `ResultsLoader` to extract `p95/p99` and `throughput` from Artillery JSON in `laboratory/src/metrics/loader.ts`
+- [X] T008 [P] Define `AggregatedResult` type with trend labels in `laboratory/src/metrics/types.ts`
+- [X] T009 Create automated hook for `git-metrics-hook.sh` in `laboratory/scripts/`
 
 ---
 
 ## Phase 3: User Story 1 - Product Domain Lifecycle (Priority: P1) 🎯 MVP
 
-**Goal**: Detailed documentation of the Product domain implementation and performance in both architectures.
+**Goal**: Establish baseline metrics and visualizations for the Product domain.
 
-**Independent Test**: Verify that Chapter 4 in `docs/research.md` contains complete C4 diagrams and performance graphs for Product CRUD.
+**Independent Test**: Generate `PRODUCT_CRUD_perf_comparison.png` and verify it contains both Monolith and Hybrid data points.
 
-- [x] T009 [P] [US1] Generate C4 Level 1 System Context diagram in `specs/018-refine-pos-benchmark/blueprints/c4_level1_system_context.puml`
-- [x] T010 [P] [US1] Generate Monolith C4 Level 2 Container diagram in `specs/018-refine-pos-benchmark/blueprints/c4_monolith_level2_container.puml`
-- [x] T011 [P] [US1] Generate Hybrid C4 Level 2 Container diagram in `specs/018-refine-pos-benchmark/blueprints/c4_hybrid_level2_container.puml`
-- [x] T012 [P] [US1] Extract Product CRUD performance data from `laboratory/reports/`
-- [x] T013 [US1] Generate Product CRUD performance comparison graph in `laboratory/reports/graphs/PRODUCT_CRUD_perf_comparison.png`
-- [x] T014 [US1] Update `docs/research.md` with Product domain implementation narratives and blueprints
+### Implementation for User Story 1
 
-**Checkpoint**: Product domain documentation is complete and verifiable.
+- [X] T010 [P] [US1] Implement `getProductCrudTrends` in `laboratory/src/metrics/aggregator.ts`
+- [X] T011 [P] [US1] Create `PRODUCT_CRUD` comparison config in `laboratory/src/reporters/graph-reporter.ts`
+- [X] T012 [P] [US1] Create `PRODUCT_CRUD` latency trend line chart in `laboratory/src/reporters/graph-reporter.ts`
+- [X] T013 [US1] Update `automated-reporter.ts` to trigger Product chart generation
+- [X] T014 [US1] Validate Product CRUD data alignment with `docs/research.md` parameters
+
+**Checkpoint**: Product domain metrics and charts are fully functional.
 
 ---
 
 ## Phase 4: User Story 2 - Inventory-Product Synchronization (Priority: P2)
 
-**Goal**: Detailed documentation of the Inventory-Product synchronization mechanism.
+**Goal**: Measure and visualize eventual consistency and inter-domain dependency overhead.
 
-**Independent Test**: Verify that Chapter 4 in `docs/research.md` explains the cross-domain synchronization with supporting blueprints.
+**Independent Test**: Generate `INVENTORY_SYNC_latency_trend.png` showing `hybridLag` metrics.
 
-- [x] T015 [P] [US2] Generate Hybrid C4 Level 3 Component diagram for Inventory sync in `specs/018-refine-pos-benchmark/blueprints/c4_hybrid_level3_inventory_sync.puml`
-- [x] T016 [P] [US2] Extract Inventory synchronization metrics (Consistency Lag) from `laboratory/reports/`
-- [x] T017 [US2] Generate Inventory sync latency trend graph in `laboratory/reports/graphs/INVENTORY_SYNC_latency_trend.png`
-- [x] T018 [US2] Update `docs/research.md` with Inventory synchronization narratives and blueprints
+### Implementation for User Story 2
 
-**Checkpoint**: Inventory synchronization documentation is complete and verifiable.
+- [X] T015 [P] [US2] Implement `getInventorySyncMetrics` (including `consistency_lag_ms`) in `laboratory/src/metrics/aggregator.ts`
+- [X] T016 [P] [US2] Create `INVENTORY_SYNC` comparison config in `laboratory/src/reporters/graph-reporter.ts`
+- [X] T017 [P] [US2] Create `INVENTORY_SYNC` lag trend chart in `laboratory/src/reporters/graph-reporter.ts`
+- [X] T018 [US2] Update `automated-reporter.ts` to trigger Inventory chart generation
+
+**Checkpoint**: Inventory synchronization metrics and consistency lag charts are complete.
 
 ---
 
 ## Phase 5: User Story 3 - End-to-End Sales Transaction (Priority: P3)
 
-**Goal**: Detailed documentation of the high-complexity Sales transaction flow.
+**Goal**: Capture high-complexity flow metrics and dual-spec integrity under load.
 
-**Independent Test**: Verify that Chapter 4 in `docs/research.md` captures the E2E Sales flow complexity and performance impact.
+**Independent Test**: Generate `SALES_TRANSACTION_perf_comparison.png` with dual-axis (Throughput vs Latency).
 
-- [x] T019 [P] [US3] Generate Monolith C4 Level 3 Component diagram for Sales flow in `specs/018-refine-pos-benchmark/blueprints/c4_monolith_level3_sales_flow.puml`
-- [x] T020 [P] [US3] Generate Hybrid C4 Level 3 Component diagram for Sales flow (CQRS/Kafka) in `specs/018-refine-pos-benchmark/blueprints/c4_hybrid_level3_sales_flow.puml`
-- [x] T021 [P] [US3] Extract Sales transaction E2E metrics from `laboratory/reports/`
-- [x] T022 [US3] Generate Sales transaction performance comparison graph in `laboratory/reports/graphs/SALES_TRANSACTION_perf_comparison.png`
-- [x] T023 [US3] Update `docs/research.md` with Sales transaction narratives and blueprints
+### Implementation for User Story 3
 
-**Checkpoint**: Sales transaction documentation is complete and verifiable.
+- [X] T019 [P] [US3] Implement `getSalesTransactionTrends` in `laboratory/src/metrics/aggregator.ts`
+- [X] T020 [P] [US3] Create `SALES_TRANSACTION` dual-axis config in `laboratory/src/reporters/graph-reporter.ts`
+- [X] T021 [P] [US3] Create `SALES_TRANSACTION` latency vs throughput chart in `laboratory/src/reporters/graph-reporter.ts`
+- [X] T022 [US3] Update `automated-reporter.ts` to trigger Sales chart generation
+
+**Checkpoint**: All domain-specific benchmarks and visualizations are complete.
 
 ---
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-**Purpose**: Improvements that affect multiple user stories and final report integrity.
+**Purpose**: Final report generation, documentation, and validation.
 
-- [x] T024 [P] Generate "Complexity vs Performance" summary graph in `laboratory/reports/graphs/complexity_vs_perf_summary.png`
-- [x] T025 [P] Finalize Chapter 4 in `docs/research.md` with executive summary and conclusion
-- [x] T026 [P] Validate all image paths and PlantUML link renderings in `docs/research.md`
-- [x] T027 [P] Run `quickstart.md` validation to ensure benchmark reproducibility documentation is accurate
+- [X] T023 [P] Implement `getComplexityVsPerformanceConfig` scatter plot in `laboratory/src/reporters/graph-reporter.ts`
+- [X] T024 [P] Generate `complexity_vs_perf_summary.png` across all domains
+- [X] T025 [P] Update `reports/BENCHMARK_REPORT_TRACE.md` with new chart links and analysis
+- [X] T026 [P] Final validation of all charts against `quickstart.md` steps
+- [X] T027 [P] Cleanup incomplete/test data from `laboratory/results/`
 
 ---
 
@@ -104,35 +107,31 @@
 
 ### Phase Dependencies
 
-- **Setup (Phase 1)**: No dependencies - can start immediately.
-- **Foundational (Phase 2)**: Depends on Setup completion - BLOCKS all blueprints and graphs.
-- **User Stories (Phase 3+)**: All depend on Foundational phase completion.
-  - Documentation phases can proceed in parallel once data is extracted.
-- **Polish (Final Phase)**: Depends on all domain documentation being complete.
+- **Setup (Phase 1)**: Must complete T001-T004 first.
+- **Foundational (Phase 2)**: Depends on Phase 1. BLOCKS all user stories.
+- **User Stories (Phase 3-5)**: Can be implemented in parallel once Phase 2 is complete.
+- **Polish (Phase 6)**: Depends on completion of all user stories.
 
 ### Parallel Opportunities
 
-- T001-T004 (Setup) can run in parallel.
-- T005-T008 (Foundational) can run in parallel.
-- T009-T011 (Product Blueprints) can run in parallel.
-- T019-T020 (Sales Blueprints) can run in parallel.
-- All User Story documentation (Phases 3, 4, 5) can run in parallel once T005-T008 are complete.
+- T001, T002, T003, T004 (Setup)
+- T010, T011, T012 (US1 Implementation)
+- T015, T016, T017 (US2 Implementation)
+- T019, T020, T021 (US3 Implementation)
+- All Phase 6 polish tasks.
 
 ---
 
 ## Implementation Strategy
 
-### MVP First (User Story 1 Only)
+### MVP First (Product Domain)
 
-1. Complete Phase 1: Setup.
-2. Complete Phase 2: Foundational.
-3. Complete Phase 3: User Story 1 (Product Domain).
-4. **STOP and VALIDATE**: Verify Product domain documentation in `docs/research.md`.
+1. Complete Setup (Phase 1) and Foundational (Phase 2).
+2. Complete User Story 1 (Phase 3).
+3. **STOP and VALIDATE**: Verify Product CRUD charts are fully populated and accurate.
 
 ### Incremental Delivery
 
-1. Setup + Foundational → Workspace ready.
-2. Add User Story 1 → Product documentation complete (MVP!).
-3. Add User Story 2 → Inventory documentation complete.
-4. Add User Story 3 → Sales documentation complete.
-5. Polish → Final report ready for submission.
+1. Add User Story 2 (Inventory) and verify consistency lag tracking.
+2. Add User Story 3 (Sales) and verify dual-axis visualizations.
+3. Finalize with cross-cutting complexity analysis (Phase 6).

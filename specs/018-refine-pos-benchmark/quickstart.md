@@ -1,40 +1,40 @@
-# Quickstart: Benchmark Reproduction
+# Quickstart: POS Benchmark Refinement
 
-## 1. Prerequisites
-- Docker & Docker Compose
+## Prerequisites
 - Node.js 20+
-- npm
+- Docker & Docker Compose
+- `artillery` (npm install -g artillery)
+- Git
 
-## 2. Infrastructure Setup
-Run the shared infrastructure (Databases, Kafka):
+## Step 1: Run Laboratory Benchmarks
+Ensure both architectures are running via Docker:
 ```bash
-docker-compose -f infrastructure/docker/docker-compose.yml up -d
+docker compose -f infrastructure/docker/docker-compose.yml up -d
 ```
 
-## 3. Launch Architectures
-### Monolith
+Execute a specific scenario benchmark:
 ```bash
-docker-compose -f infrastructure/docker/docker-compose.monolith.yml up -d
+# From repository root
+npm run lab:benchmark -- --scenario product-crud --architecture monolith
+npm run lab:benchmark -- --scenario product-crud --architecture hybrid
 ```
+Results will be stored in `laboratory/results/*.json`.
 
-### Hybrid
+## Step 2: Generate Refined Reports
+Run the automated reporter to process results and generate charts:
 ```bash
-docker-compose -f infrastructure/docker/docker-compose.hybrid.yml up -d
+# From repository root
+npm run lab:report
 ```
+Generated PNG charts will be saved to `reports/graphs/`.
 
-## 4. Run Benchmark
-Execute the benchmark scenarios using Artillery:
-```bash
-cd laboratory
-npm install
-npm run scenario:product-lifecycle
-npm run scenario:inventory-sync
-npm run scenario:sales-transaction
-```
+## Step 3: Verify Data Integrity
+Check `laboratory/results/metrics-consolidated.json` to ensure all datasets are correctly aggregated and pruned for incompleteness.
 
-## 5. Generate Report
-Generate the comparative report and graphs:
-```bash
-npm run report:generate
-```
-The final artifacts will be available in `laboratory/reports/`.
+## Step 4: Review Complexity Progression
+Compare Monolith vs Hybrid developer metrics in `reports/BENCHMARK_REPORT_TRACE.md`.
+Observe trend lines for:
+1. Latency (p95)
+2. Throughput (RPS)
+3. LOC Churn (Complexity)
+4. Commit Intervals (Cognitive Load)

@@ -11,6 +11,9 @@ export interface MetricSet {
   latency_p99: number;
   success_rate: number;
   failure_rate: number;
+  vusers_created?: number;
+  vusers_failed?: number;
+  session_length_p95?: number;
   
   // SCS Metrics
   scs_files_touched?: number;
@@ -52,6 +55,8 @@ export interface AggregatedResult {
     labels: string[];
     monolithLatency: number[];
     hybridLatency: number[];
+    monolithThroughput: number[];
+    hybridThroughput: number[];
     hybridLag: number[];
   };
 }

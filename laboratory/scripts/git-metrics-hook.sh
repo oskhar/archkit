@@ -1,12 +1,24 @@
 #!/bin/bash
-# laboratory/scripts/git-metrics-hook.sh
+
+# Simple git hook script to log commit intervals
+# Usage: Copy to .git/hooks/post-commit or run manually
+
+RESULTS_DIR="laboratory/results"
+JSONL_FILE="${RESULTS_DIR}/commit-intervals.jsonl"
+
+mkdir -p "$RESULTS_DIR"
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
-LAST_COMMIT_DATE=$(git log -1 --format=%ct)
-CURRENT_DATE=$(date +%s)
-DIFF=$((CURRENT_DATE - LAST_COMMIT_DATE))
+COMMIT=$(git rev-parse --short HEAD)
+TIMESTAMP=$(git log -1 --format=%at)
 
-echo "Time since last commit: $DIFF seconds"
+# Get interval to previous commit
+PREV_TIMESTAMP=$(git log -1 --format=%at HEAD~1 2>/dev/null)
 
-# Append metrics to a temporary file for later reporting
-echo "{\"timestamp\": \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\", \"branch\": \"$BRANCH\", \"interval_sec\": $DIFF}" >> laboratory/results/commit-intervals.jsonl
+if [ -z "$PREV_TIMESTAMP" ]; then
+    INTERVAL=0
+else
+    INTERVAL=$(( TIMESTAMP - PREV_TIMESTAMP ))
+fi
+
+echo "{\"branch\": \"$BRANCH\", \"commit\": \"$COMMIT\", \"timestamp\": $TIMESTAMP, \"interval_to_prev\": $INTERVAL}" >> "$JSONL_FILE"

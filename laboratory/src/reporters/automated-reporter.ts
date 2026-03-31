@@ -62,8 +62,25 @@ export class AutomatedReporter {
       content += `- **Throughput Efficiency**: ${throughputDelta > 0 ? 'Improved' : 'Reduced'} by ${Math.abs(throughputDelta).toFixed(2)}%\n`;
       content += `- **Latency Overhead**: ${latencyDelta > 0 ? 'Increased' : 'Decreased'} by ${Math.abs(latencyDelta).toFixed(2)}%\n\n`;
 
+      if (hybrid.consistency_lag_ms || hybrid.rehydration_time_ms) {
+        content += `### Architectural Consequences (Hybrid Only)\n\n`;
+        content += `| Metric | Value (ms) |\n`;
+        content += `|--------|------------|\n`;
+        if (hybrid.consistency_lag_ms) content += `| Eventual Consistency Lag | ${hybrid.consistency_lag_ms.toFixed(2)} |\n`;
+        if (hybrid.rehydration_time_ms) content += `| State Rehydration Time | ${hybrid.rehydration_time_ms.toFixed(2)} |\n`;
+        content += `\n`;
+
+        if (hybrid.consistency_lag_ms) {
+          const lagGraph = await this.graphReporter.generateGraph(
+            `${scenario}_consistency_lag`,
+            this.graphReporter.getConsistencyLagConfig(scenario, hybrid.consistency_lag_ms)
+          );
+          content += `![Consistency Lag](./graphs/${path.basename(lagGraph)})\n\n`;
+        }
+      }
+
       if (entry.trends) {
-        const trendGraph = await this.graphReporter.generateGraph(
+        const latencyTrend = await this.graphReporter.generateGraph(
           `${scenario}_latency_trend`,
           this.graphReporter.getTrendConfig(
             scenario, 
@@ -73,7 +90,19 @@ export class AutomatedReporter {
             'Latency p95 (ms)'
           )
         );
-        content += `![Latency Trend](./graphs/${path.basename(trendGraph)})\n\n`;
+        content += `![Latency Trend](./graphs/${path.basename(latencyTrend)})\n\n`;
+
+        const throughputTrend = await this.graphReporter.generateGraph(
+          `${scenario}_throughput_trend`,
+          this.graphReporter.getTrendConfig(
+            scenario, 
+            entry.trends.labels, 
+            entry.trends.monolithThroughput, 
+            entry.trends.hybridThroughput, 
+            'Throughput (RPS)'
+          )
+        );
+        content += `![Throughput Trend](./graphs/${path.basename(throughputTrend)})\n\n`;
       }
     }
 

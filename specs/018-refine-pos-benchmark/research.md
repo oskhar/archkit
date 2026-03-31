@@ -1,24 +1,47 @@
-# Research: Benchmark Refinement and Architectural Blueprints
+# Research: POS Architecture Complexity Benchmark (Refined)
 
-## Decision: Comprehensive Blueprint Strategy
-We will use the PlantUML C4 Model library to represent both architectures at three levels:
-- **Level 1 (System Context)**: Interaction between User, archkit, and external systems (e.g., Kafka).
-- **Level 2 (Container)**: High-level view of Monolith (single container) vs Hybrid (multiple service containers + API Gateway + Databases).
-- **Level 3 (Component)**: Deep dive into the `Sales` domain implementation (Synchronous vs CQRS/Event-Driven).
+## Decision Log
 
-## Rationale
-- **Traceability**: Chapter 4 requires "full traceability to actual system behavior". The current implementation in `apps/monolith` and `apps/hybrid` provides the exact source for these blueprints.
-- **Objectivity**: PlantUML ensures diagrams are code-based and maintainable, avoiding the "abstraction gap" where documentation diverges from the implementation.
-- **Evidence-based**: Integrating graphs from `laboratory/reports/graphs/` (e.g., `PRODUCT_CRUD_perf_comparison.png`) provides the necessary quantitative data to support the narratives.
+### Decision: Git Metric Extraction Strategy
+- **Rationale**: To capture "Lead time per SCS" and "Time between commits" (mandatory per Constitution V), we need a reliable way to query git history programmatically.
+- **Approach**: Use `child_process.execSync` with `git log` commands.
+  - **Lead Time**: `git log --pretty=format:%at --reverse` -> `last_commit_time - first_commit_time`.
+  - **Commit Intervals**: Iterate through `git log --pretty=format:%at` results and calculate `t[i] - t[i+1]`.
+- **Alternatives Considered**: Using a library like `isomorphic-git` (rejected to keep laboratory dependencies minimal).
 
-## Alternatives Considered
-- **Mermaid.js**: Rejected because PlantUML C4 provides more standardized notation for architectural levels and is better suited for complex multi-container systems like our Hybrid architecture.
-- **Hand-drawn/Excalidraw**: Rejected because it lacks consistency and versionability required for "objective, evidence-based documentation".
+### Decision: Artillery Trend Extraction
+- **Rationale**: Current `loader.ts` only extracts aggregated summaries. To capture "concurrency effects" and "event flow", we need more granular data.
+- **Approach**: Update `loader.ts` to extract `vusers.created_by_scenario` and `vusers.session_length` from the Artillery JSON report. Use `aggregate.summaries['vusers.session_length']` as a proxy for end-to-end flow duration.
+- **Validated Raw Data**: Implement a `DataValidator` class to prune results where `http.requests` < threshold or `success_rate` is NaN, ensuring only "full" datasets are graphed.
 
-## Laboratory Findings
-- **Performance Parity**: Current `BENCHMARK_REPORT` files (e.g., `2026-03-31T03-12-34-897Z.md`) indicate a significant "Architectural Tax" in Hybrid, particularly in latency p95.
-- **Complexity Metrics**: Git logs confirm that Hybrid implementation touched 2.3x more files than Monolith for the same feature set.
+### Decision: Visualization Redesign (Detailed Line Charts)
+- **Rationale**: User requires trend capture over time, SCS progression, and multi-variable overlays.
+- **Approach**:
+  - **Multi-Variable Overlays**: Use dual Y-axes in `Chart.js` to plot Latency (left) and Throughput (right) on the same line chart.
+  - **SCS Progression**: Map SCS branch merge order to the X-axis of the complexity trend chart.
+  - **Consistent Scales**: Fix `y.min: 0` and optionally set `y.max` based on the global maximum of the dataset to ensure Monolith vs Hybrid comparisons are visually comparable.
+  - **Legends & Labeling**: Enforce `plugins.legend.display: true` and `scales.y.title.display: true` in all configurations.
 
-## Commit Traceability
-- **Monolith Base**: Commit `b97ab7ee` (Modular setup).
-- **Hybrid Core**: Commit `d1e0f0c8` (Service extraction and Kafka integration).
+## Technical Unknowns Resolved
+
+### Unknown: How to extract commit intervals?
+- **Resolved**: `git log --pretty=format:%at -- [path]` returns unix timestamps. Example script:
+  ```typescript
+  const timestamps = execSync(`git log --pretty=format:%at -- ${path}`).toString().split('\n').map(Number);
+  const intervals = [];
+  for (let i = 0; i < timestamps.length - 1; i++) {
+    intervals.push(Math.abs(timestamps[i] - timestamps[i+1]));
+  }
+  ```
+
+### Unknown: How to handle empty/incomplete datasets in Chart.js?
+- **Resolved**: Filter the `results` array in `MetricsAggregator` before passing to `GraphReporter`. Use `null` for missing data points in a series to maintain the X-axis alignment without breaking the line.
+
+### Unknown: Chart.js 4.x compatibility in Node?
+- **Resolved**: `chartjs-node-canvas` requires registering components (CategoryScale, LinearScale, etc.). This is already correctly implemented in `graph-reporter.ts`.
+
+## Alignment with docs/research.md
+- **Parameter 1**: SCS Progression -> Tracked via commit timestamps and branch metadata.
+- **Parameter 2**: Latency Trend -> p95 across multiple Artillery runs.
+- **Parameter 3**: Concurrency Effects -> Throughput (RPS) vs Latency correlation.
+- **Parameter 4**: Event Flow -> Eventual consistency lag (Hybrid only) vs Sync response time (Monolith).

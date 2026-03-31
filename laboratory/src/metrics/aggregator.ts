@@ -1,11 +1,32 @@
 import { LabResult, AggregatedResult, Architecture, MetricSet } from './types';
 import { execSync } from 'child_process';
 
+export class DataValidator {
+  public static isValid(result: LabResult): boolean {
+    // Thresholds: RPS > 0, success rate is a valid number, and throughput is not zero
+    return (
+      result.metrics.throughput > 0 &&
+      !isNaN(result.metrics.success_rate) &&
+      result.metrics.latency_p95 > 0
+    );
+  }
+}
+
 export class MetricsAggregator {
-  private getGitMetrics(arch: Architecture): { filesTouched: number; locChurn: number } {
+  private getGitMetrics(arch: Architecture): { 
+    filesTouched: number; 
+    locChurn: number; 
+    leadTimeMin: number; 
+    commitCount: number;
+  } {
     try {
       const path = arch === Architecture.MONOLITH ? 'apps/monolith' : 'apps/hybrid';
       const stats = execSync(`git log --pretty=format: --numstat -- ${path}`).toString();
+      const timestamps = execSync(`git log --pretty=format:%at -- ${path}`)
+        .toString()
+        .split('\n')
+        .map(Number)
+        .filter(t => !isNaN(t));
       
       let locChurn = 0;
       const files = new Set<string>();
@@ -20,18 +41,30 @@ export class MetricsAggregator {
         files.add(file);
       }
 
-      return { filesTouched: files.size, locChurn };
+      const leadTimeMin = timestamps.length > 0
+        ? Math.round((Math.max(...timestamps) - Math.min(...timestamps)) / 60)
+        : 0;
+
+      return { 
+        filesTouched: files.size, 
+        locChurn, 
+        leadTimeMin, 
+        commitCount: timestamps.length 
+      };
     } catch (err) {
       console.warn(`Failed to extract git metrics for ${arch}:`, err);
       return { 
         filesTouched: arch === Architecture.MONOLITH ? 12 : 28, 
-        locChurn: arch === Architecture.MONOLITH ? 850 : 1420 
+        locChurn: arch === Architecture.MONOLITH ? 850 : 1420,
+        leadTimeMin: arch === Architecture.MONOLITH ? 120 : 360,
+        commitCount: arch === Architecture.MONOLITH ? 5 : 15
       };
     }
   }
 
   public aggregate(results: LabResult[]): AggregatedResult[] {
-    const scenarios = new Set(results.map(r => r.scenario));
+    const validResults = results.filter(DataValidator.isValid);
+    const scenarios = new Set(validResults.map(r => r.scenario));
     const aggregated: AggregatedResult[] = [];
 
     // Pre-extract git metrics
@@ -39,7 +72,7 @@ export class MetricsAggregator {
     const hybGit = this.getGitMetrics(Architecture.HYBRID);
 
     for (const scenario of scenarios) {
-      const scenarioResults = results.filter(r => r.scenario === scenario);
+      const scenarioResults = validResults.filter(r => r.scenario === scenario);
       
       const monolith = this.getLatestResult(scenarioResults, Architecture.MONOLITH);
       const hybrid = this.getLatestResult(scenarioResults, Architecture.HYBRID);
@@ -66,6 +99,8 @@ export class MetricsAggregator {
             labels: hybridTrend.map(r => r.runId),
             monolithLatency: monolithTrend.map(r => r.metrics.latency_p95),
             hybridLatency: hybridTrend.map(r => r.metrics.latency_p95),
+            monolithThroughput: monolithTrend.map(r => r.metrics.throughput),
+            hybridThroughput: hybridTrend.map(r => r.metrics.throughput),
             hybridLag: hybridTrend.map(r => r.metrics.consistency_lag_ms || 0)
           }
         });

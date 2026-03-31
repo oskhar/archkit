@@ -39,6 +39,8 @@ Auto-generated from all feature plans. Last updated: 2026-03-31
 - TypeScript 5.7 + Chart.js 4.x, chartjs-node-canvas, Artillery (018-refine-pos-benchmark)
 - TypeScript 5.7 / Node.js 20+ + NestJS 11, TypeORM 0.3.28, Zod 3.x, KafkaJS, TurboRepo, Artillery, Chart.js 4.x, PlantUML (018-refine-pos-benchmark)
 - MySQL 8.0 (Isolated per service in Hybrid, single DB in Monolith), PostgreSQL (Event Store) (018-refine-pos-benchmark)
+- Node.js 20+, TypeScript 5.7 + NestJS 11, TypeORM 0.3.28, Zod 3.x, KafkaJS, TurboRepo, Artillery, Chart.js 4.x, chartjs-node-canvas (018-refine-pos-benchmark)
+- MySQL 8.0 (Isolated per service in Hybrid, single DB in Monolith), JSON/JSONL for local metrics storage. (018-refine-pos-benchmark)
 
 - TypeScript (Node.js 20+) + NestJS, TypeORM, Zod, MySQL, Kafka, @nestjs/cqrs, TurboRepo (000-pos-architecture-benchmark)
 
@@ -58,9 +60,9 @@ npm test && npm run lint
 TypeScript (Node.js 20+): Follow standard conventions
 
 ## Recent Changes
+- 018-refine-pos-benchmark: Added Node.js 20+, TypeScript 5.7 + NestJS 11, TypeORM 0.3.28, Zod 3.x, KafkaJS, TurboRepo, Artillery, Chart.js 4.x, chartjs-node-canvas
 - 018-refine-pos-benchmark: Added TypeScript 5.7 / Node.js 20+ + NestJS 11, TypeORM 0.3.28, Zod 3.x, KafkaJS, TurboRepo, Artillery, Chart.js 4.x, PlantUML
 - 018-refine-pos-benchmark: Added TypeScript 5.7 + Chart.js 4.x, chartjs-node-canvas, Artillery
-- 018-refine-pos-benchmark: Added TypeScript 5.7 (Node.js 20+) + NestJS 11, TypeORM 0.3.28, Zod 3.x, KafkaJS, TurboRepo, Artillery
 
 
 <!-- MANUAL ADDITIONS START -->

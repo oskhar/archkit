@@ -1,8 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Product } from '../../../domain/entities/product.entity';
-import { ProductProducer } from '../../../infrastructure/kafka/product.producer';
+import { Product } from '../../domain/entities/product.entity';
+import { ProductProducer } from '../../infrastructure/kafka/product.producer';
 
 export class CreateProductCommand {
   constructor(

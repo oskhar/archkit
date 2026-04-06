@@ -4,28 +4,41 @@ To execute the laboratory benchmarks and produce research-aligned reports, follo
 
 ## 1. Step-by-Step Execution Sequence
 
-### Phase A: Infrastructure & Seeding
-Ensure both environments are clean before starting to maintain data parity.
-1. **Initialize Monolith DB**: `docker-compose -f infrastructure/docker/docker-compose.monolith.yml up -d`
-2. **Seed Monolith**: `cd laboratory && npm run seed:monolith -- --items 1000`
-3. **Initialize Hybrid Infrastructure**: `docker-compose -f infrastructure/docker/docker-compose.hybrid.yml up -d` (Includes MySQL instances + Redpanda/Kafka).
-   *Wait at least 15-30 seconds for Kafka to stabilize before seeding.*
-4. **Seed Hybrid**: `npm run seed:hybrid -- --items 1000`
+### Phase A: Infrastructure & Environment Setup
+To ensure research-grade parity, both architectures MUST be executed within Docker containers with strictly controlled resource limits (Monolith = 1/3 Total Hybrid Domain resources).
+
+1. **Start Infrastructure**: Ensure databases and Kafka are running:
+   ```bash
+   docker compose -f infrastructure/docker/docker-compose.yml up -d
+   ```
+2. **Build Applications**:
+   ```bash
+   docker compose -f infrastructure/docker/docker-compose.yml -f infrastructure/docker/docker-compose.apps.yml build
+   ```
 
 ### Phase B: Monolith (Baseline) Execution
-1. **Start App**: `cd apps/monolith && npm run start`
-2. **Run Scenarios**: Execute Artillery in sequence. Ensure output follows the naming convention:
+1. **Start App**: 
+   ```bash
+   docker compose -f infrastructure/docker/docker-compose.yml -f infrastructure/docker/docker-compose.apps.yml up -d monolith
+   ```
+2. **Seed Monolith**: `cd laboratory && npm run seed:monolith -- --items 1000` (Note: Ensure `.env` points to `localhost:3310` or use `docker exec`).
+3. **Run Scenarios**: Execute Artillery in sequence.
    - `npm run test:us1 -- -o results/monolith-product_crud-$(date +%s).json`
    - `npm run test:us2 -- -o results/monolith-inventory_sync-$(date +%s).json`
    - `npm run test:us3 -- -o results/monolith-sales_transaction-$(date +%s).json`
-3. **Stop App**: Terminate the monolith process to free ports and resources.
+4. **Stop App**: `docker compose -f infrastructure/docker/docker-compose.yml -f infrastructure/docker/docker-compose.apps.yml stop monolith`
 
 ### Phase C: Hybrid (Experimental) Execution
-1. **Start Services**: `cd apps/hybrid && npm run start:all` (Uses TurboRepo to boot all microservices).
-2. **Run Scenarios**: Execute identical scenarios against the Hybrid gateway.
+1. **Start Services**:
+   ```bash
+   docker compose -f infrastructure/docker/docker-compose.yml -f infrastructure/docker/docker-compose.apps.yml up -d product-service inventory-service sales-service api-gateway
+   ```
+2. **Seed Hybrid**: `npm run seed:hybrid -- --items 1000`
+3. **Run Scenarios**:
    - `npm run test:us1 -- -o results/hybrid-product_crud-$(date +%s).json`
    - `npm run test:us2 -- -o results/hybrid-inventory_sync-$(date +%s).json`
    - `npm run test:us3 -- -o results/hybrid-sales_transaction-$(date +%s).json`
+4. **Stop Environment**: `docker compose -f infrastructure/docker/docker-compose.yml -f infrastructure/docker/docker-compose.apps.yml down`
 
 ---
 

@@ -31,7 +31,7 @@ export class ProductsController {
   ) {
     this.productServiceUrl = this.configService.get<string>(
       'PRODUCT_SERVICE_URL',
-      'http://localhost:3001',
+      process.env.PRODUCT_SERVICE_URL || 'http://localhost:3001',
     );
   }
 

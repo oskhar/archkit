@@ -8,9 +8,16 @@ services:
       MYSQL_USER: archkit_user
       MYSQL_PASSWORD: archkit_password
     ports:
-      - '3306:3306'
+      - '3310:3306'
     volumes:
       - mysql_monolith_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uarchkit_user", "-parchkit_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - archkit-network
 
   mysql-product:
     image: mysql:8.0
@@ -24,6 +31,13 @@ services:
       - '3307:3306'
     volumes:
       - mysql_product_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uarchkit_user", "-parchkit_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - archkit-network
 
   mysql-inventory:
     image: mysql:8.0
@@ -37,6 +51,13 @@ services:
       - '3308:3306'
     volumes:
       - mysql_inventory_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uarchkit_user", "-parchkit_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - archkit-network
 
   mysql-sales:
     image: mysql:8.0
@@ -50,6 +71,13 @@ services:
       - '3309:3306'
     volumes:
       - mysql_sales_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uarchkit_user", "-parchkit_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - archkit-network
 
   redpanda:
     image: docker.redpanda.com/redpandadata/redpanda:latest
@@ -68,6 +96,13 @@ services:
       - '9644:9644'
     volumes:
       - redpanda_data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9644/v1/status/ready"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - archkit-network
 
 volumes:
   mysql_monolith_data:
@@ -75,3 +110,8 @@ volumes:
   mysql_inventory_data:
   mysql_sales_data:
   redpanda_data:
+
+networks:
+  archkit-network:
+    name: archkit-network
+    driver: bridge

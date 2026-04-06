@@ -12,9 +12,10 @@ async function bootstrap() {
     transport: Transport.KAFKA,
     options: {
       client: {
-        clientId: 'gateway-client',
-        brokers: ['localhost:9092'],
+        clientId: 'gateway-client-server',
+        brokers: [process.env.KAFKA_BROKERS || 'localhost:9092'],
       },
+
       consumer: {
         groupId: 'gateway-consumer',
       },

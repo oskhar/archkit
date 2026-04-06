@@ -44,7 +44,7 @@ export class ResultsLoader {
                                  { p50: 0, p95: 0, p99: 0 });
         
         const sessionLength = summaries['vusers.session_length'] || { p50: 0, p95: 0, p99: 0 };
-        const okCount = counters['http.codes.200'] || 0;
+        const okCount = (counters['http.codes.200'] || 0) + (counters['http.codes.201'] || 0);
         const totalCount = counters['http.requests'] || 1;
 
         results.push({

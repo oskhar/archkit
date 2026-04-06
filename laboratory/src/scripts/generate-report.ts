@@ -8,7 +8,7 @@ import * as path from 'path';
 async function generate() {
   const args = process.argv.slice(2);
   const highRes = args.includes('--high-res');
-  const includeScs = args.includes('--include-scs');
+  const includeScs = !args.includes('--no-scs');
 
   const resultsDir = path.join(__dirname, '../../results');
   const reportsDir = path.join(__dirname, '../../reports');
@@ -20,7 +20,10 @@ async function generate() {
   const traceLogger = new TraceabilityLogger(reportsDir);
   const aggregator = new MetricsAggregator();
 
-  console.log(`Generating refined comparative benchmark report (High-Res: ${highRes}, SCS: ${includeScs})...`);
+  console.log(`Generating refined comparative benchmark report (High-Res: ${highRes}, SCS/Complexity: ${includeScs})...`);
+  if (includeScs) {
+    console.log(`Analyzing GitHub development type space and structural complexity...`);
+  }
   
   const results = loader.loadResults();
   if (results.length === 0) {

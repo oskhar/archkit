@@ -17,6 +17,8 @@ scenarios:
           json:
             name: "Lab Test Product"
             price: 99.99
+            category: "Electronics"
+            description: "A high-quality lab test product"
           capture:
             - json: "$.id"
               as: "productId"

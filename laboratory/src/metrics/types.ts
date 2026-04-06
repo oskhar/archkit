@@ -18,6 +18,9 @@ export interface MetricSet {
   // SCS Metrics
   scs_files_touched?: number;
   scs_loc_churn?: number;
+  scs_commit_type_dist?: Record<string, number>;
+  scs_avg_files_per_commit?: number;
+  scs_max_files_single_commit?: number;
   
   // Architectural Consequences
   consistency_lag_ms?: number;

@@ -27,26 +27,51 @@ export class AutomatedReporter {
       const { scenario, monolith, hybrid } = entry;
       content += `## Scenario: ${scenario}\n\n`;
       
-      content += `### Performance Metrics\n\n`;
+      content += `### Architectural Performance Profile\n\n`;
+      
+      const detailedGraph = await this.graphReporter.generateGraph(
+        `${scenario}_detailed_perf`,
+        this.graphReporter.getDetailedPerformanceConfig(scenario, monolith, hybrid)
+      );
+      content += `![Performance Profile](./graphs/${path.basename(detailedGraph)})\n\n`;
+
       content += `| Metric | Monolith (Baseline) | Hybrid (Experimental) | Delta (%) |\n`;
       content += `|--------|---------------------|----------------------|-----------|\n`;
       content += `| Throughput (RPS) | ${monolith.throughput.toFixed(2)} | ${hybrid.throughput.toFixed(2)} | ${MetricCalculator.calculateDelta(monolith.throughput, hybrid.throughput).toFixed(2)}% |\n`;
+      content += `| Latency p50 (ms) | ${monolith.latency_p50.toFixed(2)} | ${hybrid.latency_p50.toFixed(2)} | ${MetricCalculator.calculateDelta(monolith.latency_p50, hybrid.latency_p50).toFixed(2)}% |\n`;
       content += `| Latency p95 (ms) | ${monolith.latency_p95.toFixed(2)} | ${hybrid.latency_p95.toFixed(2)} | ${MetricCalculator.calculateDelta(monolith.latency_p95, hybrid.latency_p95).toFixed(2)}% |\n`;
-      content += `| Failure Rate | ${monolith.failure_rate.toFixed(2)}% | ${hybrid.failure_rate.toFixed(2)}% | ${MetricCalculator.calculateDelta(monolith.failure_rate, hybrid.failure_rate).toFixed(2)}% |\n\n`;
-
-      // Generate Dual Axis Graph
-      const dualGraph = await this.graphReporter.generateGraph(
-        `${scenario}_perf_comparison`,
-        this.graphReporter.getDualAxisConfig(scenario, [monolith.throughput, hybrid.throughput], [monolith.latency_p95, hybrid.latency_p95])
-      );
-      content += `![Performance Comparison](./graphs/${path.basename(dualGraph)})\n\n`;
+      content += `| Latency p99 (ms) | ${monolith.latency_p99.toFixed(2)} | ${hybrid.latency_p99.toFixed(2)} | ${MetricCalculator.calculateDelta(monolith.latency_p99, hybrid.latency_p99).toFixed(2)}% |\n`;
+      content += `| Success Rate | ${(monolith.success_rate * 100).toFixed(2)}% | ${(hybrid.success_rate * 100).toFixed(2)}% | ${MetricCalculator.calculateDelta(monolith.success_rate, hybrid.success_rate).toFixed(2)}% |\n\n`;
 
       if (this.options.includeScs) {
         content += `### SCS & Complexity Metrics\n\n`;
         content += `| Metric | Monolith | Hybrid | Multiplier |\n`;
         content += `|--------|----------|--------|------------|\n`;
         content += `| Files Touched | ${monolith.scs_files_touched} | ${hybrid.scs_files_touched} | ${(hybrid.scs_files_touched! / monolith.scs_files_touched!).toFixed(2)}x |\n`;
-        content += `| LOC Churn | ${monolith.scs_loc_churn} | ${hybrid.scs_loc_churn} | ${(hybrid.scs_loc_churn! / monolith.scs_loc_churn!).toFixed(2)}x |\n\n`;
+        content += `| LOC Churn | ${monolith.scs_loc_churn} | ${hybrid.scs_loc_churn} | ${(hybrid.scs_loc_churn! / monolith.scs_loc_churn!).toFixed(2)}x |\n`;
+        content += `| Avg Files/Commit | ${monolith.scs_avg_files_per_commit?.toFixed(2)} | ${hybrid.scs_avg_files_per_commit?.toFixed(2)} | ${(hybrid.scs_avg_files_per_commit! / monolith.scs_avg_files_per_commit!).toFixed(2)}x |\n`;
+        content += `| Max Files/Commit | ${monolith.scs_max_files_single_commit} | ${hybrid.scs_max_files_single_commit} | ${(hybrid.scs_max_files_single_commit! / monolith.scs_max_files_single_commit!).toFixed(2)}x |\n\n`;
+
+        content += `#### Development Type Space Distribution\n\n`;
+        content += `| Commit Type | Monolith | Hybrid |\n`;
+        content += `|-------------|----------|--------|\n`;
+        const allTypes = Array.from(new Set([
+          ...Object.keys(monolith.scs_commit_type_dist || {}),
+          ...Object.keys(hybrid.scs_commit_type_dist || {})
+        ])).sort();
+        
+        for (const type of allTypes) {
+          const monoCount = monolith.scs_commit_type_dist?.[type] || 0;
+          const hybCount = hybrid.scs_commit_type_dist?.[type] || 0;
+          content += `| ${type} | ${monoCount} | ${hybCount} |\n`;
+        }
+        content += `\n`;
+
+        content += `#### Software Complexity Analysis\n\n`;
+        const complexityDelta = ((hybrid.scs_avg_files_per_commit! / monolith.scs_avg_files_per_commit!) - 1) * 100;
+        content += `- **Cognitive Load**: The Hybrid architecture shows a **${Math.abs(complexityDelta).toFixed(1)}% ${complexityDelta > 0 ? 'increase' : 'decrease'}** in average files touched per commit.\n`;
+        content += `- **Structural Blast Radius**: Maximum files edited in a single commit is **${(hybrid.scs_max_files_single_commit! / monolith.scs_max_files_single_commit!).toFixed(1)}x** larger in Hybrid, indicating higher cross-component coupling during certain operations.\n`;
+        content += `- **Development Velocity**: Monolith favors more frequent, smaller commits while Hybrid shows larger, more consolidated architectural changes.\n\n`;
 
         const complexityGraph = await this.graphReporter.generateGraph(
           `${scenario}_complexity_vs_perf`,

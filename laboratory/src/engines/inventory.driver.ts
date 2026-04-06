@@ -36,7 +36,7 @@ export class InventoryDriver extends LaboratoryEngine {
       latency_p95: 70,
       latency_p99: 150,
       success_rate: 1,
-      error_rate: 0,
+      failure_rate: 0,
       consistency_lag_ms: this.architecture === Architecture.HYBRID ? 200 : 0,
     };
   }
@@ -44,10 +44,9 @@ export class InventoryDriver extends LaboratoryEngine {
   protected async collectDeveloperMetrics(): Promise<DeveloperMetrics> {
     return {
       lead_time_min: 180,
-      lines_of_code_churn: 80,
-      files_touched: 8,
+      lines_changed: 80,
       commit_count: 5,
-      time_between_commits_avg: 2100,
+      churn_ratio: 0.1,
     };
   }
 }

@@ -1,7 +1,5 @@
 import { LaboratoryEngine } from './base.engine';
 import { LabResult, Architecture, MetricSet, DeveloperMetrics } from '../metrics/types';
-import * as fs from 'fs';
-import * as path from 'path';
 
 export class ProductDriver extends LaboratoryEngine {
   protected architecture: Architecture;
@@ -42,7 +40,7 @@ export class ProductDriver extends LaboratoryEngine {
       latency_p95: 50,
       latency_p99: 100,
       success_rate: 1,
-      error_rate: 0,
+      failure_rate: 0,
     };
   }
 
@@ -50,10 +48,9 @@ export class ProductDriver extends LaboratoryEngine {
     // In a real implementation, parse git history and intervals.jsonl
     return {
       lead_time_min: 120,
-      lines_of_code_churn: 50,
-      files_touched: 5,
+      lines_changed: 50,
       commit_count: 3,
-      time_between_commits_avg: 1800,
+      churn_ratio: 0.05,
     };
   }
 }

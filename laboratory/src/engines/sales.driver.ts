@@ -36,7 +36,7 @@ export class SalesDriver extends LaboratoryEngine {
       latency_p95: 150,
       latency_p99: 300,
       success_rate: 1,
-      error_rate: 0,
+      failure_rate: 0,
       consistency_lag_ms: this.architecture === Architecture.HYBRID ? 500 : 0,
     };
   }
@@ -44,10 +44,9 @@ export class SalesDriver extends LaboratoryEngine {
   protected async collectDeveloperMetrics(): Promise<DeveloperMetrics> {
     return {
       lead_time_min: 300,
-      lines_of_code_churn: 150,
-      files_touched: 12,
+      lines_changed: 150,
       commit_count: 8,
-      time_between_commits_avg: 2400,
+      churn_ratio: 0.15,
     };
   }
 }

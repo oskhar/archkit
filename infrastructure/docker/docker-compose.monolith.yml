@@ -8,7 +8,7 @@ services:
       MYSQL_USER: archkit_user
       MYSQL_PASSWORD: archkit_password
     ports:
-      - '3306:3306'
+      - '3310:3306'
     volumes:
       - mysql_monolith_data:/var/lib/mysql
 

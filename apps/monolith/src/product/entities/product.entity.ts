@@ -12,6 +12,6 @@ export class Product extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   description?: string;
 
-  @Column({ length: 50 })
+  @Column({ length: 50, default: 'Uncategorized' })
   category: string;
 }

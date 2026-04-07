@@ -11,6 +11,15 @@ services:
       - '3307:3306'
     volumes:
       - mysql_product_data:/var/lib/mysql
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uarchkit_user", "-parchkit_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   mysql-inventory:
     image: mysql:8.0
@@ -24,6 +33,15 @@ services:
       - '3308:3306'
     volumes:
       - mysql_inventory_data:/var/lib/mysql
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uarchkit_user", "-parchkit_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   mysql-sales:
     image: mysql:8.0
@@ -37,6 +55,15 @@ services:
       - '3309:3306'
     volumes:
       - mysql_sales_data:/var/lib/mysql
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uarchkit_user", "-parchkit_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   redpanda:
     image: docker.redpanda.com/redpandadata/redpanda:latest

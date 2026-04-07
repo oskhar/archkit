@@ -11,6 +11,15 @@ services:
       - '3310:3306'
     volumes:
       - mysql_monolith_data:/var/lib/mysql
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uarchkit_user", "-parchkit_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
   mysql_monolith_data:

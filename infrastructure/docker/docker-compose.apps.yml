@@ -15,7 +15,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 512M
+          memory: 1G
     ports:
       - "3000:3000"
     depends_on:
@@ -41,7 +41,7 @@ services:
       resources:
         limits:
           cpus: '0.1'
-          memory: 256M
+          memory: 1G
     ports:
       - "3000:3000"
     depends_on:
@@ -69,7 +69,9 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 512M
+          memory: 1G
+    ports:
+      - "3001:3001"
     depends_on:
       mysql-product:
         condition: service_healthy
@@ -96,7 +98,9 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 512M
+          memory: 1G
+    ports:
+      - "3002:3002"
     depends_on:
       mysql-inventory:
         condition: service_healthy
@@ -123,7 +127,9 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 512M
+          memory: 1G
+    ports:
+      - "3003:3003"
     depends_on:
       mysql-sales:
         condition: service_healthy
